@@ -1,4 +1,5 @@
 #Program to remove first column of an xyz file, as required to become a POSCAR file. NOTE: data here was already ordered so similar atoms are together
+
 import os,sys
 def main():
     inputfile = open('slab2_b.xyz', 'r')
