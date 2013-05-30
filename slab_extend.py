@@ -35,7 +35,6 @@ def main():
         z_array.append(float(line.split()[2])) 
     inputfile.close()
     
-    x_cartesian = []
     #Convert columns to Cartesian:
     x_cartesian =[ x * x_lattice for x in x_array] #element wise multiplication
     y_cartesian = [y * y_lattice for y in y_array]
@@ -49,17 +48,18 @@ def main():
     x_extension =[x + x_lattice for x in x_cartesian] #copy cell in positive x-dir'n
     y_extension = [y + y_lattice for y in y_cartesian] #copy cell in positive y-dir'n
   # z_extension = [z + z_lattice for z in z_cartesian]
-    
-    new_xcoordinates = []
+
+
     #Concatinate the original x_cartesian to x_extension:
     new_xcoordinates = x_cartesian + x_extension
       
-    new_ycoordinates = []
     #Concatinate y_cartesian to y_extension:
     new_ycoordinates = y_cartesian + x_cartesian
+
+    for i in range(len(new_xcoordinates)):
+#        print new_xcoordinates[i], new_ycoordinates[i], z_cartesian[i%len(z_cartesian)]
+        outputfile.write(str(new_xcoordinates[i]) + ' ' + str(new_ycoordinates[i]) + ' ' + str(z_cartesian[i%len(z_cartesian)]) + '\n')
     
-    outputfile.write(str(new_xcoordinates) + '  ' + str(new_ycoordinates) + str(z_cartesian) + '\n')     
- 
     outputfile.close()
 if __name__=='__main__':
     main()
