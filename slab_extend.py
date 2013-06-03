@@ -29,19 +29,19 @@ def main():
     z_array = [] 
     #Loop to convert direct to cartesian and separate into x,y,z arrays
     for line in inputfile:
-        if len(line.split) > 0
+        if len(line.split()) > 0:
         #Retrieve columns from POSCAR (remember to remove spacing in file) 
             x_array.append(float(line.split()[0]))
             y_array.append(float(line.split()[1]))
             z_array.append(float(line.split()[2])) 
-    print x_array
+   # print z_array
     inputfile.close()
     
     #Convert columns to Cartesian:
     x_cartesian =[ x * x_lattice for x in x_array] #element wise multiplication
     y_cartesian = [y * y_lattice for y in y_array]
     z_cartesian = [z * z_lattice for z in z_array] 
-        
+    #print x_cartesian     
 
     x_extension = []
     y_extension = []
@@ -50,13 +50,13 @@ def main():
     x_extension =[x + x_lattice for x in x_cartesian] #copy cell in positive x-dir'n
     y_extension = [y + y_lattice for y in y_cartesian] #copy cell in positive y-dir'n
   # z_extension = [z + z_lattice for z in z_cartesian]
-
+    
 
     #Concatinate the original x_cartesian to x_extension:
     new_xcoordinates = x_cartesian + x_extension
-      
+     
     #Concatinate y_cartesian to y_extension:
-    new_ycoordinates = y_cartesian + x_cartesian
+    new_ycoordinates = y_cartesian + y_extension
 
     for i in range(len(new_xcoordinates)):
 #        print new_xcoordinates[i], new_ycoordinates[i], z_cartesian[i%len(z_cartesian)]
