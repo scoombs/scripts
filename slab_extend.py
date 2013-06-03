@@ -23,17 +23,18 @@ def main():
     inputfile.readline() #skips 6th line,types of atoms
     inputfile.readline() #skips 7th line,number of atoms
     inputfile.readline() #skips 8th line,Direct 
-    
+   
     x_array = []
     y_array = []
     z_array = [] 
     #Loop to convert direct to cartesian and separate into x,y,z arrays
     for line in inputfile:
+        if len(line.split) > 0
         #Retrieve columns from POSCAR (remember to remove spacing in file) 
-        x_array.append(float(line.split()[0]))
-        y_array.append(float(line.split()[1]))
-        z_array.append(float(line.split()[2])) 
-    print x_array[0]
+            x_array.append(float(line.split()[0]))
+            y_array.append(float(line.split()[1]))
+            z_array.append(float(line.split()[2])) 
+    print x_array
     inputfile.close()
     
     #Convert columns to Cartesian:
