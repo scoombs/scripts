@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 #Program to extend POSCAR inputfile, a slab, in the x and y direction, and output the new file
+
 import os,sys
 def main():
 
