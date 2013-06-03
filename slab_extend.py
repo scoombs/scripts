@@ -18,7 +18,7 @@ def main():
     y_lattice = float(line4.split()[1])
     line5 = inputfile.readline()
     z_lattice = float(line5.split()[2])
-    
+    #print x_lattice,y_lattice,z_lattice 
     #For now, skip over the line describing number of atoms:
     inputfile.readline() #skips 6th line,types of atoms
     inputfile.readline() #skips 7th line,number of atoms
@@ -33,6 +33,7 @@ def main():
         x_array.append(float(line.split()[0]))
         y_array.append(float(line.split()[1]))
         z_array.append(float(line.split()[2])) 
+    print x_array[0]
     inputfile.close()
     
     #Convert columns to Cartesian:
