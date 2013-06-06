@@ -2,16 +2,27 @@
 import random,sys,os
 
 def main():
-
+   #Allow the user to input natoms
+    try: 
+        program = sys.argv[0]
+        natoms = int(sys.argv[1])
+        #nsteps = int(sys.argv[2])
+    except IndexError:
+        #Tell user what is needed
+        print '\nusage: '+program+' natoms (where natoms is an integer)\n'
+        #Exit program cleanly
+        sys.exit(0)
+       
     outfile = open('randomcoordinates.xyz','w')
-    #Generates 3 lists for integers between 0 and 100 of length 90
-    x = random.sample(range(100),90)
-    y = random.sample(range(100),90)
-    z = random.sample(range(100),90)
-
+    #Generates 3 lists for floats between 0 and 100 of length natoms
+    x = [random.uniform(0,100) for _ in range(0,natoms)] 
+    y = [random.uniform(0,100) for _ in range(0,natoms)]
+    z = [random.uniform(0,100) for _ in range(0,natoms)]
+    
     atomtype = 'Si'
-
-    for i in range(90):
+    
+    outfile.write(str(natoms) + '\n'+ '\n')
+    for i in range(natoms):
         outfile.write(str(atomtype) + ' ' +str(x[i]) + ' ' + str(y[i]) + ' ' + str(z[i]) + '\n' )
 
     outfile.close()
