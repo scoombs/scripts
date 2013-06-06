@@ -1,4 +1,4 @@
-#!usr/bin/env python
+#!/usr/bin/env python
 #This code generates a random xyz file. This will be used to check g(r) functions in I.S.A.A.C.S --- expecting to see a plot of a straight line.
 import random,sys,os
 
