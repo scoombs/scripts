@@ -1,10 +1,11 @@
+#!usr/bin/env python
 #This code generates a random xyz file. This will be used to check g(r) functions in I.S.A.A.C.S --- expecting to see a plot of a straight line.
 import random,sys,os
 
 def main():
    #Allow the user to input natoms
     try: 
-        program = sys.argv[0]
+        program = sys.argv[0] #Gives filename
         natoms = int(sys.argv[1])
         #nsteps = int(sys.argv[2])
     except IndexError:
@@ -20,7 +21,7 @@ def main():
     z = [random.uniform(0,100) for _ in range(0,natoms)]
     
     atomtype = 'Si'
-    
+    #Format of the written xyz file :
     outfile.write(str(natoms) + '\n'+ '\n')
     for i in range(natoms):
         outfile.write(str(atomtype) + ' ' +str(x[i]) + ' ' + str(y[i]) + ' ' + str(z[i]) + '\n' )
