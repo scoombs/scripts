@@ -3,17 +3,19 @@
 import random,sys,os
 
 def main():
-   #Allow the user to input natoms
+   #Allow the user to input number of atoms & number of timesteps
     try: 
         program = sys.argv[0] #Gives filename
         natoms = int(sys.argv[1])
         nsteps = int(sys.argv[2])
+        lattice = int(sys.argv[3])
     except IndexError:
         #Tell user what is needed
         print '\nusage: '+program+' natoms nsteps (where natoms and nsteps are integers)\n'
         #Exit program cleanly
         sys.exit(0)
-       
+    except Exception:
+        lattice = 10
     outfile = open('randomcoordinates.xyz','w')
     atomtype = 'Si'
 
@@ -21,10 +23,10 @@ def main():
     for n in range(nsteps):
 
         #Generates 3 lists for floats between 0 and 100 of length natoms
-        x = [random.uniform(0,100) for _ in range(0,natoms)] 
-        y = [random.uniform(0,100) for _ in range(0,natoms)]
-        z = [random.uniform(0,100) for _ in range(0,natoms)]
-    
+        x = [random.uniform(0,lattice) for _ in range(0,natoms)] 
+        y = [random.uniform(0,lattice) for _ in range(0,natoms)]
+        z = [random.uniform(0,lattice) for _ in range(0,natoms)]
+        print x 
         #Format of the written xyz file :
         outfile.write(str(natoms) + '\n'+ '\n')
         for i in range(natoms):
