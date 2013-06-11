@@ -33,9 +33,9 @@ def main():
             atom2 = atoms[j]
           #  print 'atom2 =' ,atom2 
             if atom1 != atom2: #create a pair of all possible combos of 2 different atoms
-             #  print atom1,atom2     
+             #  print atom1,atom2  #test is good,produces (natoms choose 2) combos everytime    
                pairs.append([atom1,atom2]) #stores pairs in a list called "pairs"
-               print pairs        
+             #  print pairs        
 
 # This executes main() only if executed from shell
 if __name__ == '__main__':
