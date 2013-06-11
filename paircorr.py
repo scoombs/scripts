@@ -24,18 +24,23 @@ def main():
         tmp.pop(0)         # pops off first entry in each list (atom type)
         atoms.append(tmp)  # appends lists of atom coordinates together
     
-    #loop to find the distance between two atoms
-    pairs = []
+    #loops to find the distance between two atoms:
     for i in range(natoms): #loops over first atom
         atom1 = atoms[i] 
-        #print 'atom1 =',atom1
-        for j in np.arange(i,natoms): #loops over a second atom,after i to avoid duplicate combos
+
+        for j in np.arange(i+1,natoms): #loops over a second atom,after i to avoid duplicate combos
             atom2 = atoms[j]
-          #  print 'atom2 =' ,atom2 
-            if atom1 != atom2: #create a pair of all possible combos of 2 different atoms
-             #  print atom1,atom2  #test is good,produces (natoms choose 2) combos everytime    
-               pairs.append([atom1,atom2]) #stores pairs in a list called "pairs"
-             #  print pairs        
+           # print 'atom1,atom2=', atom1,atom2  #test is good,produces (natoms choose 2) combos everytime    
+          
+            #Finds the difference between x,y,z coordinates of each pair
+            x_pair_diff =float(atom1[0]) - float(atom2[0])
+            y_pair_diff =float(atom1[1]) - float(atom2[1])
+            z_pair_diff =float(atom1[2]) - float(atom2[2])        
+           # print 'atom1[i],atom2[i],x_pair_diff=',atom1[2], atom2[2],z_pair_diff
+            
+            distances = (x_pair_diff**2 + y_pair_diff**2 + z_pair_diff**2)**(1./2.)
+           # print distances
+
 
 # This executes main() only if executed from shell
 if __name__ == '__main__':
