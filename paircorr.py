@@ -2,19 +2,31 @@
 #Computes pair correlation function,g(r),taking *.xyz input file
 import os,sys
 import numpy as np 
+def pbc_round(input_value):
+    """
+    This function is used for periodic boundary conditions,it rounds to a value to the nearest integer.
+
+    """
+    i = int(input_value)
+    if (abs(input_value-i) >= 0.5):
+        if (input_value > 0): i+=1
+        if (input_value < 0): i-=1
+    return i
 
 def main():
     """
     This is the main function.
     """
-    #Allow the user to input a lattice constant and number of bins to be used:
+    #Allow the user to input the periodic boundary condiotns (box size) and number of bins to be used:
     try:
         program =sys.argv[0] #Gives filename
-        lattice = int(sys.argv[1])
-        nbins = int(sys.argv[2])
+        lattice_x = int(sys.argv[1])
+        lattice_y = int(sys.argv[2])
+        lattice_z = int(sys.argv[3])
+        nbins = int(sys.argv[4])
     except IndexError:
         #Tell user what is needed
-        print '\nusage: '+program+' lattice nbins (where lattice & nbins are integers)\n' 
+        print '\nusage: '+program+' lattice_x lattice_y lattice_z nbins (where lattice & nbins are integers)\n' 
         #Exit program cleanly
         sys.exit(0)
 
@@ -26,15 +38,12 @@ def main():
   
     atoms = []
     for line in inputfile:
-#        x= line.split()[1]
-#        y= line.split()[2]
-#        z= line.split()[3]
-#        lists.append([x,y,z])
 
         tmp = line.split() # Splits list
         tmp.pop(0)         # Pops off first entry in each list (atom type)
         atoms.append(tmp)  # Appends lists of atom coordinates together
-    
+
+    distances = []
     #Loops to find the distance between two atoms:
     for i in range(natoms): #Loops over first atom
         atom1 = atoms[i] 
@@ -44,16 +53,24 @@ def main():
            # print 'atom1,atom2=', atom1,atom2  #Test is good,produces (natoms choose 2) combos everytime    
           
             #Finds the difference between x,y,z coordinates of each pair:
-            x_pair_diff =float(atom1[0]) - float(atom2[0])
-            y_pair_diff =float(atom1[1]) - float(atom2[1])
-            z_pair_diff =float(atom1[2]) - float(atom2[2])        
+            x_pair_diff = float(atom1[0]) - float(atom2[0])
+            y_pair_diff = float(atom1[1]) - float(atom2[1])
+            z_pair_diff = float(atom1[2]) - float(atom2[2])        
            # print 'atom1[i],atom2[i],x_pair_diff=',atom1[2], atom2[2],z_pair_diff
             
-            distances = (x_pair_diff**2 + y_pair_diff**2 + z_pair_diff**2)**(1./2.)
-           # print distances
+            #Need to consider affects of periodic boundary conditions:
+            x_pair_diff -= lattice_x*pbc_round(x_pair_diff/lattice_x)
+            y_pair_diff -= lattice_y*pbc_round(y_pair_diff/lattice_y)
+            z_pair_diff -= lattice_z*pbc_round(z_pair_diff/lattice_z)
+      
+            distances.append((x_pair_diff**2 + y_pair_diff**2 + z_pair_diff**2)**(1./2.))
+#            print distances
+    hist,bin_edges = np.histogram(distances,bins=nbins, range=(0,lattice_x/2))
 
-            hist,bin_edges = np.histogram(distances,bins=nbins, range=(0,lattice/2))
-            print hist,bin_edges
+    #Prepares an x column,bin_edges and y_column hist, which can plot a histogram in gnuplot
+    for i in range(len(hist)):
+        print bin_edges[i], hist[i]
+
 # This executes main() only if executed from shell
 if __name__ == '__main__':
     main()
