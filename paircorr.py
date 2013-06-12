@@ -29,26 +29,26 @@ def main():
         #Tell user what is needed
         print '\nusage: '+program+' lattice_x lattice_y lattice_z nsteps  nbins (where lattice & nsteps & nbins are integers)\n' 
         #Exit program cleanly
-        Tsys.exit(0)
+        sys.exit(0)
 
-    inputfile = open( 'test.xyz' , 'r')
+    inputfile = open( 'random2.xyz' , 'r')
     outfile = open('paircorr_data' , 'w')
    
     #Timestep loop
+    distances = []
+ 
     for n in range(nsteps):
 
         natoms = int(inputfile.readline().split()[0])  #Reads line 1,number of atoms
         inputfile.readline() #Reads line 2, blank space
   
         atoms = []
-        for line in inputfile:
-
+        for i in range(natoms):
+            line = inputfile.readline()
             tmp = line.split() # Splits list
             tmp.pop(0)         # Pops off first entry in each list (atom type)
             atoms.append(tmp)  # Appends lists of atom coordinates together
     
-    
-        distances = []
         #Loops to find the distance between two atoms:
         for i in range(natoms): #Loops over first atom
             atom1 = atoms[i] 
