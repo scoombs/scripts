@@ -31,7 +31,7 @@ def main():
         #Exit program cleanly
         sys.exit(0)
 
-    inputfile = open( 'random2.xyz' , 'r')
+    inputfile = open( 'bigtest.xyz' , 'r')
     outfile = open('paircorr_data' , 'w')
    
     #Timestep loop
@@ -77,17 +77,23 @@ def main():
     for i in range(len(hist)):
        # print bin_edges[i], hist[i]
 
-        #Determine number of atoms that lie within donuts, dr, with inner radius r_right & outer r_left
+        #Determine density of atoms that lie within donuts, dr, with inner radius r_right & outer r_left
         bin_width = (lattice_x/2.)/(nbins)
-       # print 'bin_width=',bin_width
         r_left = bin_edges[i]
-       # print 'r_left=',r_left
         r_right = bin_width + r_left
        
         dr = (4./3.)*np.pi*(r_right**3) - (4./3.)*np.pi*(r_left**3) #difference in volumes of 2 spheres 
-       # print dr
-        probability = hist[i]/dr
-        print dr,probability
+        #print dr
+        #According to wiki: use g(r) = 4*np.pi*r*dr
+
+        # VOLUME VS r PLOT stuff:
+        r = (r_left + r_right)*(1./2.) #Average of bin,to be used in plot r vs v
+        v_bin = (4./3.)*np.pi*(r**3)
+#        print bin_edges[i],v_bin 
+
+        density = hist[i]/dr
+        print bin_edges[i],density
+
 # This executes main() only if executed from shell
 if __name__ == '__main__':
     main()
