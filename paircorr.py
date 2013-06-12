@@ -67,15 +67,27 @@ def main():
                 x_pair_diff -= lattice_x*pbc_round(x_pair_diff/lattice_x)
                 y_pair_diff -= lattice_y*pbc_round(y_pair_diff/lattice_y)
                 z_pair_diff -= lattice_z*pbc_round(z_pair_diff/lattice_z)
-                print x_pair_diff    
+               # print x_pair_diff    
                 distances.append((x_pair_diff**2 + y_pair_diff**2 + z_pair_diff**2)**(1./2.))
 #               print distances
+   
     hist,bin_edges = np.histogram(distances,bins=nbins, range=(0,lattice_x/2))
 
     #Prepares an x column,bin_edges and y_column hist, which can plot a histogram in gnuplot
     for i in range(len(hist)):
-        print bin_edges[i], hist[i]
+       # print bin_edges[i], hist[i]
 
+        #Determine number of atoms that lie within donuts, dr, with inner radius r_right & outer r_left
+        bin_width = (lattice_x/2.)/(nbins)
+       # print 'bin_width=',bin_width
+        r_left = bin_edges[i]
+       # print 'r_left=',r_left
+        r_right = bin_width + r_left
+       
+        dr = (4./3.)*np.pi*(r_right**3) - (4./3.)*np.pi*(r_left**3) #difference in volumes of 2 spheres 
+       # print dr
+        probability = hist[i]/dr
+        print dr,probability
 # This executes main() only if executed from shell
 if __name__ == '__main__':
     main()
