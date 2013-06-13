@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#Program to extend POSCAR inputfile, a slab, in the x and y direction, and output the new file
+#Program to extend POSCAR inputfile, a slab, in the x and y direction, and output the new file,whihc contains only coordinates, atomtypes,etc mus tbe added by hand for now
 
 import os,sys
 def main():
@@ -19,7 +19,8 @@ def main():
     y_lattice = float(line4.split()[1])
     line5 = inputfile.readline()
     z_lattice = float(line5.split()[2])
-#    print x_lattice,y_lattice,z_lattice 
+#    print x_lattice,y_lattice,z_lattice
+ 
     #For now, skip over the line describing number of atoms:
     inputfile.readline() #skips 6th line,types of atoms
     inputfile.readline() #skips 7th line,number of atoms
@@ -46,7 +47,8 @@ def main():
 
     x_extension = []
     y_extension = []
-  # z_extension = [] code can easily be modified to extend in z-dir'n   
+  # z_extension = [] code can easily be modified to extend in z-dir'n
+   
     #Loops to create a copy of the cell in the x and y directions:
     x_extension =[x + x_lattice for x in x_cartesian] #copy cell in positive x-dir'n
     y_extension = [y + y_lattice for y in y_cartesian] #copy cell in positive y-dir'n
