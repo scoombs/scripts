@@ -65,11 +65,12 @@ def main():
  
     print 'x_exten=', x_extension
    
+    #Need to order data,putting together coordinates based on atom type:
     atom1_xcart = []
     atom1_xext = []
     for i in range(natom1):
         atom1_xcart.append(x_cartesian[i]) #Extracts atom type 1 data from x_cartesian
-        atom1_xext.append(x_extension[i]) #Extrates atom type 1 data from x_extension
+        atom1_xext.append(x_extension[i]) #Extracts atom type 1 data from x_extension
         atom1_newx = atom1_xcart + atom1_xext # Puts together all atom type 1 x data
         print 'newx=',atom1_newx   
 
