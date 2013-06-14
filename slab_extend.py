@@ -76,16 +76,17 @@ def main():
     atom1_xext = []
     atom1_ycart = []
     atom1_yext = []
-    for i in range(natom1):
-        atom1_xcart.append(x_cartesian[i]) #Extracts atom type 1 data from x_cartesian
-        atom1_xext.append(x_extension[i]) #Extracts atom type 1 data from x_extension
-        atom1_newx = atom1_xcart + atom1_xext # Puts together all atom type 1 xdata
-       # print 'newx=',atom1_newx
-        atom1_ycart.append(y_cartesian[i]) 
-        atom1_yext.append(y_extension[i])
-        atom1_newy = atom1_ycart + atom1_yext #Puts together all atom type 1 ydata
+    for i in natom_list:
+        for j in np.arange(0,total_atoms,natom_list[i]):
+            atom1_xcart.append(x_cartesian[i]) #Extracts atom type i data from x_cartesian
+            atom1_xext.append(x_extension[i]) #Extracts atom type i data from x_extension
+            atom1_newx = atom1_xcart + atom1_xext # Puts together all atom type i xdata
+           # print 'newx=',atom1_newx
+            atom1_ycart.append(y_cartesian[j]) 
+            atom1_yext.append(y_extension[j])
+            atom1_newy = atom1_ycart + atom1_yext #Puts together all atom type 1 ydata
         print 'newy=',atom1_newy   
-
+        print 'atom1_ycart=',atom1_ycart    
    # for i in range(len(new_xcoordinates)):
       #  print new_xcoordinates[i], new_ycoordinates[i], z_cartesian[i%len(z_cartesian)]
     #    outputfile.write(str(new_xcoordinates[i]) + ' ' + str(new_ycoordinates[i]) + ' ' + str(z_cartesian[i%len(z_cartesian)]) + '\n')
