@@ -2,6 +2,8 @@
 #Program to extend a Ti,Si,O POSCAR inputfile, a slab, in the x and y direction, and output the new file,whihc contains only coordinates, atomtypes,etc mus tbe added by hand for now
 
 import os,sys
+import numpy as np
+
 def main():
 
     inputfile = open('POSCAR1', 'r')
@@ -12,7 +14,9 @@ def main():
     atom1 = str(line1.split()[0]) #reads in atom type 1
     atom2 = str(line1.split()[1]) #reads in atom type 2
     atom3 = str(line1.split()[2]) #reads in atom type 3
-  
+    
+    atom_type = [atom1,atom2,atom3]
+   
     inputfile.readline() #skips 2nd line
     
     #Retrieve lattice constants from POSCAR file:
@@ -28,7 +32,9 @@ def main():
     natom1 = int(line7.split()[0]) #Reads in number of atoms type 1
     natom2 = int(line7.split()[1]) #Reads in number of atoms type 2
     natom3 = int(line7.split()[2]) #Reads in number of atoms type 3
-    total_atoms =int( natom1 + natom2 + natom3) #Sum of all atoms
+    natom_list = [natom1,natom2,natom3]
+    total_atoms = np.sum(natom_list)  #Sum of all atoms
+   
    # print natom1,natom2,natom3,total_atoms
 
     inputfile.readline() #skips 8th line,Direct 
