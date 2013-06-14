@@ -9,36 +9,24 @@ def main():
     inputfile = open('POSCAR1', 'r')
     outputfile = open('extend_POSCAR','w')
 
-    #Read in the first line of the POSCAR file:
-    line1 = inputfile.readline() 
-    #atom_type = [inputfile.readline().split()]
-    atom1 = str(line1.split()[0]) #reads in atom type 1
-    atom2 = str(line1.split()[1]) #reads in atom type 2
-    atom3 = str(line1.split()[2]) #reads in atom type 3
-    
-    atom_type = [atom1,atom2,atom3]
-   
-    inputfile.readline() #skips 2nd line
+    #Read in line 1 of the POSCAR file:
+    atom_type = inputfile.readline().split() #atom_type = [atom1,atom2,atom3,etc]
+  
+    inputfile.readline() #Skips line 2
     
     #Retrieve lattice constants from POSCAR file:
-    x_lattice = float(inputfile.readline().split()[0]) #reads in line 3    
-    y_lattice = float(inputfile.readline().split()[1]) #reads in line 4
-    z_lattice = float(inputfile.readline().split()[2]) #reads in line 5
+    x_lattice = float(inputfile.readline().split()[0]) #Reads in line 3    
+    y_lattice = float(inputfile.readline().split()[1]) #Reads in line 4
+    z_lattice = float(inputfile.readline().split()[2]) #Reads in line 5
     print'lattices =', x_lattice,y_lattice,z_lattice
   
-    inputfile.readline() #skips 6th line,types of atoms
+    inputfile.readline() #Skips 6th line,types of atoms
    
-    #Read in line defining how many of each type of atom, to be used in loop later on
-    line7 = inputfile.readline() #Reads 7th line,number of atoms
-    natom1 = int(line7.split()[0]) #Reads in number of atoms type 1
-    natom2 = int(line7.split()[1]) #Reads in number of atoms type 2
-    natom3 = int(line7.split()[2]) #Reads in number of atoms type 3
-    natom_list = [natom1,natom2,natom3]
-    total_atoms = np.sum(natom_list)  #Sum of all atoms
-   
-   # print natom1,natom2,natom3,total_atoms
-
-    inputfile.readline() #skips 8th line,Direct 
+    #Read in line 7, defines how many of each type of atom
+    natom_list = map(int,inputfile.readline().split()) #Reads in,stores,makes elements integers
+    total_atoms = sum(natom_list)  #Sum of all atoms
+ 
+    inputfile.readline() #Skips 8th line,Direct 
    
     x_array = []
     y_array = []
@@ -54,37 +42,39 @@ def main():
     inputfile.close()
     
     #Convert columns to Cartesian:
-    x_cartesian = [x * x_lattice for x in x_array] #element wise multiplication
+    x_cartesian = [x * x_lattice for x in x_array] #Element wise multiplication
     y_cartesian = [y * y_lattice for y in y_array]
     z_cartesian = [z * z_lattice for z in z_array] 
     print y_cartesian #,y_cartesian,z_cartesian     
 
     x_extension = []
     y_extension = []
-    z_extension = [] #code can easily be modified to extend in z-dir'n
+    z_extension = [] 
    
     #Loops to create a copy of the cell in the x and y directions:
     for x in x_cartesian:
-        x_extension.append(x + x_lattice) #copy cell in positive x-dir'n
+        x_extension.append(x + x_lattice) #Copy cell in positive x-dir'n
         
     for y in y_cartesian:
-        y_extension.append(y + y_lattice) #copy cell in positive y-dir'n
+        y_extension.append(y + y_lattice) #Copy cell in positive y-dir'n
 
     for z in z_cartesian:
-        z_extension.append(z) #make a copy
+        z_extension.append(z) #Make a copy of z
 
     print 'y_exten=', y_extension
    
     #Need to order data,putting together coordinates based on atom type:
     atom_xcart = []
     atom_xext = []
+
     atom_ycart = []
     atom_yext = []
+
     atom_zcart = []
     atom_zext = []
 
     start_index = 0
-
+    # Loops over x,y,z arrays and extensions to shift atom groups together
     for i in natom_list:
         print natom_list[i]
    
