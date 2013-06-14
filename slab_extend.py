@@ -11,6 +11,7 @@ def main():
 
     #Read in the first line of the POSCAR file:
     line1 = inputfile.readline() 
+    #atom_type = [inputfile.readline().split()]
     atom1 = str(line1.split()[0]) #reads in atom type 1
     atom2 = str(line1.split()[1]) #reads in atom type 2
     atom3 = str(line1.split()[2]) #reads in atom type 3
@@ -60,7 +61,7 @@ def main():
 
     x_extension = []
     y_extension = []
-  # z_extension = [] code can easily be modified to extend in z-dir'n
+    z_extension = [] #code can easily be modified to extend in z-dir'n
    
     #Loops to create a copy of the cell in the x and y directions:
     for x in x_cartesian:
@@ -68,25 +69,40 @@ def main():
         
     for y in y_cartesian:
         y_extension.append(y + y_lattice) #copy cell in positive y-dir'n
- 
+
+    for z in z_cartesian:
+        z_extension.append(z) #make a copy
+
     print 'y_exten=', y_extension
    
     #Need to order data,putting together coordinates based on atom type:
-    atom1_xcart = []
-    atom1_xext = []
-    atom1_ycart = []
-    atom1_yext = []
+    atom_xcart = []
+    atom_xext = []
+    atom_ycart = []
+    atom_yext = []
+    atom_zcart = []
+    atom_zext = []
+
+    start_index = 0
+
     for i in natom_list:
-        for j in np.arange(0,total_atoms,natom_list[i]):
-            atom1_xcart.append(x_cartesian[i]) #Extracts atom type i data from x_cartesian
-            atom1_xext.append(x_extension[i]) #Extracts atom type i data from x_extension
-            atom1_newx = atom1_xcart + atom1_xext # Puts together all atom type i xdata
+        print natom_list[i]
+   
+        end_index = start_index + natom_list[i]
+        
+        for j in np.arange(start_index,end_index):
+
+            atom_xcart.append(x_cartesian[j]) #Extracts atom type i data from x_cartesian
+            atom_xext.append(x_extension[j]) #Extracts atom type i data from x_extension
+            ordered_newx = atom_xcart + atom_xext # Puts together all atom type i xdata
            # print 'newx=',atom1_newx
-            atom1_ycart.append(y_cartesian[j]) 
-            atom1_yext.append(y_extension[j])
-            atom1_newy = atom1_ycart + atom1_yext #Puts together all atom type 1 ydata
-        print 'newy=',atom1_newy   
-        print 'atom1_ycart=',atom1_ycart    
+            atom_ycart.append(y_cartesian[j]) 
+            atom_yext.append(y_extension[j])
+            ordered_newy = atom1_ycart + atom1_yext #Puts together all atom type 1 ydata
+
+        start_index = end_index
+        print 'newy=',atom_newy   
+        print 'atom_ycart=',atom_ycart   
    # for i in range(len(new_xcoordinates)):
       #  print new_xcoordinates[i], new_ycoordinates[i], z_cartesian[i%len(z_cartesian)]
     #    outputfile.write(str(new_xcoordinates[i]) + ' ' + str(new_ycoordinates[i]) + ' ' + str(z_cartesian[i%len(z_cartesian)]) + '\n')
