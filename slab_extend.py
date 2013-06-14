@@ -40,7 +40,6 @@ def main():
     for i in range(total_atoms):
         line = inputfile.readline()
         if len(line.split()) > 0: #If not a blank line
-        #Retrieve columns from POSCAR
             x_array.append(float(line.split()[0]))
             y_array.append(float(line.split()[1]))
             z_array.append(float(line.split()[2])) 
@@ -51,7 +50,7 @@ def main():
     x_cartesian = [x * x_lattice for x in x_array] #element wise multiplication
     y_cartesian = [y * y_lattice for y in y_array]
     z_cartesian = [z * z_lattice for z in z_array] 
-    print x_cartesian,y_cartesian,z_cartesian     
+    print x_cartesian #,y_cartesian,z_cartesian     
 
     x_extension = []
     y_extension = []
@@ -64,15 +63,15 @@ def main():
     for y in y_cartesian:
         y_extension.append(y + y_lattice) #copy cell in positive y-dir'n
  
-    print x_extension,y_extension
-
-    #Concatinate the original x_cartesian to x_extension:
-   # new_xcoordinates = x_cartesian + x_extension
-     
-    #Concatinate y_cartesian to y_extension:
-   # new_ycoordinates = y_cartesian + y_extension
-
-   # print new_xcoordinates,new_ycoordinates     
+    print 'x_exten=', x_extension
+   
+    atom1_xcart = []
+    atom1_xext = []
+    for i in range(natom1):
+        atom1_xcart.append(x_cartesian[i]) #Extracts atom type 1 data from x_cartesian
+        atom1_xext.append(x_extension[i]) #Extrates atom type 1 data from x_extension
+        atom1_newx = atom1_xcart + atom1_xext # Puts together all atom type 1 x data
+        print 'newx=',atom1_newx   
 
    # for i in range(len(new_xcoordinates)):
       #  print new_xcoordinates[i], new_ycoordinates[i], z_cartesian[i%len(z_cartesian)]
