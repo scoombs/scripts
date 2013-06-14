@@ -50,7 +50,7 @@ def main():
     x_cartesian = [x * x_lattice for x in x_array] #element wise multiplication
     y_cartesian = [y * y_lattice for y in y_array]
     z_cartesian = [z * z_lattice for z in z_array] 
-    print x_cartesian #,y_cartesian,z_cartesian     
+    print y_cartesian #,y_cartesian,z_cartesian     
 
     x_extension = []
     y_extension = []
@@ -63,16 +63,22 @@ def main():
     for y in y_cartesian:
         y_extension.append(y + y_lattice) #copy cell in positive y-dir'n
  
-    print 'x_exten=', x_extension
+    print 'y_exten=', y_extension
    
     #Need to order data,putting together coordinates based on atom type:
     atom1_xcart = []
     atom1_xext = []
+    atom1_ycart = []
+    atom1_yext = []
     for i in range(natom1):
         atom1_xcart.append(x_cartesian[i]) #Extracts atom type 1 data from x_cartesian
         atom1_xext.append(x_extension[i]) #Extracts atom type 1 data from x_extension
-        atom1_newx = atom1_xcart + atom1_xext # Puts together all atom type 1 x data
-        print 'newx=',atom1_newx   
+        atom1_newx = atom1_xcart + atom1_xext # Puts together all atom type 1 xdata
+       # print 'newx=',atom1_newx
+        atom1_ycart.append(y_cartesian[i]) 
+        atom1_yext.append(y_extension[i])
+        atom1_newy = atom1_ycart + atom1_yext #Puts together all atom type 1 ydata
+        print 'newy=',atom1_newy   
 
    # for i in range(len(new_xcoordinates)):
       #  print new_xcoordinates[i], new_ycoordinates[i], z_cartesian[i%len(z_cartesian)]
