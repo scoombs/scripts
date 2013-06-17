@@ -45,7 +45,7 @@ def main():
     x_cartesian = [x * x_lattice for x in x_array] #Element wise multiplication
     y_cartesian = [y * y_lattice for y in y_array]
     z_cartesian = [z * z_lattice for z in z_array] 
-    print 'x_cartesian=',x_cartesian  #,y_cartesian,z_cartesian     
+    print 'x_cartesian=',y_cartesian  #,y_cartesian,z_cartesian     
 
     x_extension = []
     y_extension = []
@@ -61,7 +61,7 @@ def main():
     for z in z_cartesian:
         z_extension.append(z) #Make a copy of z
 
-    print 'x_extension=', x_extension
+    print 'x_extension=', y_extension
    
     #Need to order data,putting together coordinates based on atom type:
     ordered_x = []
@@ -101,13 +101,13 @@ def main():
         ordered_y.extend(atom_ycart + atom_yext) #Puts together all atom type i ycoordinates
         ordered_z.extend(atom_zcart + atom_zext) #Puts together all atom type i zcoordinates
         
-        print 'atom_xcart=',atom_xcart
-        print 'atom_xext =',atom_xext
-    print 'orderedx=',ordered_x 
+        print 'atom_xcart=',atom_ycart
+        print 'atom_xext =',atom_yext
+    print 'orderedx=',ordered_y 
   
-   # for i in range(len(ordered_newx)):
-      #  print ordered_x[i], ordered_y[i], ordered_z[i]
-    #    outputfile.write(str(ordered_x[i] + ' ' + str(ordered_y[i]) + ' ' + str(ordered_z[i]) + '\n')
+    for i in range(len(ordered_x)):
+        print ordered_x[i], ordered_y[i], ordered_z[i]
+        outputfile.write(str(ordered_x[i]) + ' ' + str(ordered_y[i]) + ' ' + str(ordered_z[i]) + '\n')
     
     outputfile.close()
 if __name__=='__main__':
