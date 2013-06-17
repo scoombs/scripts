@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-#Program to extend a Ti,Si,O POSCAR inputfile, a slab, in the x and y direction, and output the new file,whihc contains only coordinates, atomtypes,etc mus tbe added by hand for now
-
+#Program to extend a Direct POSCAR inputfile, a slab, in the x and y direction, and output the new extended POSCAR file 
 import os,sys
 import numpy as np
 
@@ -45,8 +44,7 @@ def main():
     x_cartesian = [x * x_lattice for x in x_array] #Element wise multiplication
     y_cartesian = [y * y_lattice for y in y_array]
     z_cartesian = [z * z_lattice for z in z_array] 
-    print 'x_cartesian=',y_cartesian  #,y_cartesian,z_cartesian     
-
+      
     x_extension = []
     y_extension = []
     z_extension = [] 
@@ -60,8 +58,6 @@ def main():
 
     for z in z_cartesian:
         z_extension.append(z) #Make a copy of z
-
-    print 'x_extension=', y_extension
    
     #Need to order data,putting together coordinates based on atom type:
     ordered_x = []
@@ -100,13 +96,32 @@ def main():
         ordered_x.extend(atom_xcart + atom_xext) #Put all x data into correct order based on atom type
         ordered_y.extend(atom_ycart + atom_yext) #Puts together all atom type i ycoordinates
         ordered_z.extend(atom_zcart + atom_zext) #Puts together all atom type i zcoordinates
-        
-        print 'atom_xcart=',atom_ycart
-        print 'atom_xext =',atom_yext
-    print 'orderedx=',ordered_y 
-  
+    
+    #Formatting the output file to be POSCAR-like:
+
+    #Writes out atom types on line 1:
+    for i in range(len(atom_type)):
+        outputfile.write(str(atom_type[i]) + ' ')
+   
+    outputfile.write('\n'+' ' + ' ' + str(1.00000)+ '\n')#Writes a 1.00000 on line 2
+    outputfile.write(' ' + ' ' + str(x_lattice) +' '+ str(0.00) +' '+ str(0.00) + '\n') #Writes out x_lattice on line 3
+    outputfile.write(' ' + ' ' + str(0.00) +' '+ str(y_lattice) +' '+str(0.00) + '\n') #Writes y_lattice on line 4
+    outputfile.write(' ' + ' ' + str(0.00) +' '+ str(0.00) +' '+str(z_lattice) + '\n') #Writes z_lattice on line 5
+   
+    #Writes out atom types on line 6: 
+    for i in range(len(atom_type)):
+        outputfile.write(' ' + str(atom_type[i]))
+
+    outputfile.write('\n') #Skips to line 7
+    #Writes out number of each atom on line 7:
+    for i in range(len(natom_list)):
+        outputfile.write(' '+ ' '+ str(2*natom_list[i]))
+
+    outputfile.write('\n' + str('Cartesian')+ '\n') #Writes Cartesian on line 8
+     
+    #Formatting for the output file,puts lists into x,y,z columns 
     for i in range(len(ordered_x)):
-        print ordered_x[i], ordered_y[i], ordered_z[i]
+       # print ordered_x[i], ordered_y[i], ordered_z[i]
         outputfile.write(str(ordered_x[i]) + ' ' + str(ordered_y[i]) + ' ' + str(ordered_z[i]) + '\n')
     
     outputfile.close()
