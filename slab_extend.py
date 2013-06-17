@@ -64,21 +64,24 @@ def main():
     print 'x_extension=', x_extension
    
     #Need to order data,putting together coordinates based on atom type:
-    atom_xcart = []
-    atom_xext = []
-
-    atom_ycart = []
-    atom_yext = []
-
-    atom_zcart = []
-    atom_zext = []
 
     start_index = 0
     # Loops over x,y,z arrays and extensions to shift atom groups together
-    for i in natom_list:
-       
+    for i in range(len(natom_list)):
+        print 'outer loop' 
+#        print 'start_index', start_index,'i',i
         end_index = start_index + natom_list[i]
-        
+#        print 'end_index', end_index
+  
+        atom_xcart = []
+        atom_xext = []
+
+        atom_ycart = []
+        atom_yext = []
+
+        atom_zcart = []
+        atom_zext = []
+
         for j in np.arange(start_index,end_index):
 
             atom_xcart.append(x_cartesian[j]) #Extracts atom type i data from x_cartesian
@@ -95,12 +98,13 @@ def main():
             atom_zext.append(z_extension[j]) #Extracts atom type i data from z_extension
             
             ordered_z = atom_zcart + atom_zext #Puts together all atom type i zcoordinates
+#            print 'start_index', start_index,'i,j',i,j
+            start_index = end_index
+#            print 'start_index', start_index
 
-        start_index = end_index
-
-    print 'atom_xcart=',atom_xcart
-    print 'atom_xext =',atom_xext
-    print 'orderedx=',ordered_x 
+        print 'atom_xcart=',atom_xcart
+        print 'atom_xext =',atom_xext
+        print 'orderedx=',ordered_x 
   
    # for i in range(len(ordered_newx)):
       #  print ordered_x[i], ordered_y[i], ordered_z[i]
