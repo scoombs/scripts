@@ -7,7 +7,7 @@ def main():
     inputfile = open('POSCAR', 'r')
     outputfile = open('slab2','w')
     
-    #Skips first 2 lines in POSCaR file
+    #Skips first 2 lines in POSCAR file
     inputfile.readline()
     inputfile.readline() 
     
@@ -37,10 +37,11 @@ def main():
     for i in range(1,natoms[1] + 1):
        line =  inputfile.readline()
        outputfile.write(str(i) +' '+ str('1') +' ' + ' ' + line.strip() + '\n')
-    #For the O atom, know now as atom 2
-    for i in range(natoms[1]+1,natoms[2]+1):
+    #For the O atom, known now as atom 2
+    print natoms[1],natoms[2]
+    for j in np.arange(natoms[1]+1,natoms[1] + natoms[2]+1):
         line = inputfile.readline()
-        outputfile.write(str(i) +' '+ str('2') +' ' + ' ' + line.strip() + '\n')
+        outputfile.write(str(j) +' '+ str('2') +' ' + ' ' + line.strip() + '\n')
    
     #Add periodic boundary conditions to *.gen:
     outputfile.write(str(0.0000) + ' '+ str(0.0000)+ ' '+ str(0.0000) + '\n' + str(xlatt_line) + '\n' + str(ylatt_line) + '\n' + str(zlatt_line)) 
