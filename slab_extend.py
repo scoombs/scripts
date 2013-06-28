@@ -44,24 +44,26 @@ def main():
     x_cartesian = [x * x_lattice for x in x_array] #Element wise multiplication
     y_cartesian = [y * y_lattice for y in y_array]
     z_cartesian = [z * z_lattice for z in z_array] 
-    print y_cartesian
+    print x_cartesian
     x_extension = []
     y_extension = []
     z_extension = [] 
    
-    for i in range(3):  
-        for j in range(3): #change 3 to number of copies you want,just testing now
-            for x in x_cartesian:
-               x_extension.append(x + j*x_lattice) #Copy cell in positive x-dir'n
-               x_extension = sorted(x_extension) # Sorts in increasing order 
+    for i in range(3):  #Makes multiple copies of coordinates,need this to equal copies you want
+
+        for x in x_cartesian:
+           for j in range(3): #To order x coordinates
+               x_extension.append( x + i*x_lattice) #Copy cell in positive x-dir'n
+
+        for k in range(3): #Change 3 to number of copies you want,will extend out using lattice constants
             for y in y_cartesian:
-                y_extension.append(y + j*y_lattice) #Copy cell in positive y-dir'n
+                y_extension.append(y + k*y_lattice) #Copy cell in positive y-dir'n
             for z in z_cartesian:
                 z_extension.append(z) #Make a copy of z
    
-    print x_extension,len(x_extension)
+    print x_extension
     print y_extension,len(y_extension)
-    print z_extension,len(z_extension)
+    #print z_extension,len(z_extension)
     #Need to order data,putting together coordinates based on atom type:
     ordered_x = []
     ordered_y = []
@@ -72,31 +74,32 @@ def main():
     for i in range(len(natom_list)):
    
         end_index = start_index + natom_list[i]
-        atom_xcart = []
+        #atom_xcart = []
         atom_xext = []
  
-        atom_ycart = []
+        #atom_ycart = []
         atom_yext = []
  
-        atom_zcart = []
+        #atom_zcart = []
         atom_zext = []
         #This loop changed "window" depending on the number of each type of atom 
         for j in np.arange(start_index,end_index):
 
-            atom_xcart.append(x_cartesian[j]) #Extracts atom type i data from x_cartesian
+           # atom_xcart.append(x_cartesian[j]) #Extracts atom type i data from x_cartesian
             atom_xext.append(x_extension[j])  #Extracts atom type i data from x_extension
-            atom_ycart.append(y_cartesian[j]) #Extracts atom type i data from y_cartesian
-            atom_yext.append(y_extension[j])  #Extracts atom type i data from y_extension
 
+            #atom_ycart.append(y_cartesian[j]) #Extracts atom type i data from y_cartesian
+            atom_yext.append(y_extension[j])  #Extracts atom type i data from y_extension
            
-            atom_zcart.append(z_cartesian[j]) #Extracts atom type i data from z_cartesian
+           # atom_zcart.append(z_cartesian[j]) #Extracts atom type i data from z_cartesian
             atom_zext.append(z_extension[j])  #Extracts atom type i data from z_extension
+
             start_index = end_index
 
-        ordered_x.extend(atom_xcart + atom_xext) #Put all x data into correct order based on atom type
-        ordered_y.extend(atom_ycart + atom_yext) #Puts together all atom type i ycoordinates
-        ordered_z.extend(atom_zcart + atom_zext) #Puts together all atom type i zcoordinates
-        print atom_xext
+        ordered_x.extend( atom_xext) #Put all x data into correct order based on atom type
+        ordered_y.extend( atom_yext) #Puts together all atom type i ycoordinates
+        ordered_z.extend( atom_zext) #Puts together all atom type i zcoordinates
+    print atom_xext,ordered_x
     #Formatting the output file to be POSCAR-like:
 
     #Writes out atom types on line 1:
