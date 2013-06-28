@@ -5,7 +5,7 @@ import numpy as np
 
 def main():
 
-    inputfile = open('POSCAR1', 'r')
+    inputfile = open('POSCARfundy', 'r')
     outputfile = open('extend_POSCAR','w')
 
     #Read in line 1 of the POSCAR file:
@@ -17,7 +17,7 @@ def main():
     x_lattice = float(inputfile.readline().split()[0]) #Reads in line 3    
     y_lattice = float(inputfile.readline().split()[1]) #Reads in line 4
     z_lattice = float(inputfile.readline().split()[2]) #Reads in line 5
-   # print'lattices =', x_lattice,y_lattice,z_lattice
+    print'lattices =', x_lattice,y_lattice,z_lattice
   
     inputfile.readline() #Skips 6th line,types of atoms
    
@@ -44,21 +44,23 @@ def main():
     x_cartesian = [x * x_lattice for x in x_array] #Element wise multiplication
     y_cartesian = [y * y_lattice for y in y_array]
     z_cartesian = [z * z_lattice for z in z_array] 
-      
+    print x_cartesian
     x_extension = []
     y_extension = []
     z_extension = [] 
    
-    #Loops to create a copy of the cell in the x and y directions:
-    for x in x_cartesian:
-        x_extension.append(x + x_lattice) #Copy cell in positive x-dir'n
-        
-    for y in y_cartesian:
-        y_extension.append(y + y_lattice) #Copy cell in positive y-dir'n
-
-    for z in z_cartesian:
-        z_extension.append(z) #Make a copy of z
+    
+    for i in range(3): #change 3 to number of copies you want,just testing now
+        for x in x_cartesian:
+            x_extension.append(x + i*x_lattice) #Copy cell in positive x-dir'n
+        for j in range(3):
+            for y in y_cartesian:
+                y_extension.append(y + j*y_lattice) #Copy cell in positive y-dir'n
+            for k in range(3): 
+                for z in z_cartesian:
+                    z_extension.append(z) #Make a copy of z
    
+    print x_extension
     #Need to order data,putting together coordinates based on atom type:
     ordered_x = []
     ordered_y = []
@@ -103,10 +105,10 @@ def main():
     for i in range(len(atom_type)):
         outputfile.write(str(atom_type[i]) + ' ')
    
-    outputfile.write('\n'+' ' + ' ' + str(1.00000)+ '\n')#Writes a 1.00000 on line 2
+    outputfile.write('\n'+ ' ' + ' ' + str(1.00000)+ '\n')#Writes a 1.00000 on line 2
     outputfile.write(' ' + ' ' + str(x_lattice) +' '+ str(0.00) +' '+ str(0.00) + '\n') #Writes out x_lattice on line 3
     outputfile.write(' ' + ' ' + str(0.00) +' '+ str(y_lattice) +' '+str(0.00) + '\n') #Writes y_lattice on line 4
-    outputfile.write(' ' + ' ' + str(0.00) +' '+ str(0.00) +' '+str(z_lattice) + '\n') #Writes z_lattice on line 5
+    outputfile.write(' ' + ' ' + str(0.00) +' '+ str(0.00) +' '+ str(z_lattice) + '\n') #Writes z_lattice on line 5
    
     #Writes out atom types on line 6: 
     for i in range(len(atom_type)):
