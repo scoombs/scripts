@@ -6,7 +6,7 @@ import numpy as np
 def main():
 
     inputfile = open('POSCARfundy', 'r')
-    outputfile = open('extend_POSCAR','w')
+    outputfile = open('extend_POSCAR1','w')
 
     #Read in line 1 of the POSCAR file:
     atom_type = inputfile.readline().split() #atom_type = [atom1,atom2,atom3,etc]
@@ -17,7 +17,7 @@ def main():
     x_lattice = float(inputfile.readline().split()[0]) #Reads in line 3    
     y_lattice = float(inputfile.readline().split()[1]) #Reads in line 4
     z_lattice = float(inputfile.readline().split()[2]) #Reads in line 5
-    print'lattices =', x_lattice,y_lattice,z_lattice
+   # print'lattices =', x_lattice,y_lattice,z_lattice
   
     inputfile.readline() #Skips 6th line,types of atoms
    
@@ -44,40 +44,40 @@ def main():
     x_cartesian = [x * x_lattice for x in x_array] #Element wise multiplication
     y_cartesian = [y * y_lattice for y in y_array]
     z_cartesian = [z * z_lattice for z in z_array] 
-    print x_cartesian
+    print y_cartesian
     x_extension = []
     y_extension = []
     z_extension = [] 
    
-    
-    for i in range(3): #change 3 to number of copies you want,just testing now
-        for x in x_cartesian:
-            x_extension.append(x + i*x_lattice) #Copy cell in positive x-dir'n
-        for j in range(3):
+    for i in range(3):  
+        for j in range(3): #change 3 to number of copies you want,just testing now
+            for x in x_cartesian:
+               x_extension.append(x + j*x_lattice) #Copy cell in positive x-dir'n
+               x_extension = sorted(x_extension) # Sorts in increasing order 
             for y in y_cartesian:
                 y_extension.append(y + j*y_lattice) #Copy cell in positive y-dir'n
-            for k in range(3): 
-                for z in z_cartesian:
-                    z_extension.append(z) #Make a copy of z
+            for z in z_cartesian:
+                z_extension.append(z) #Make a copy of z
    
-    print x_extension
+    print x_extension,len(x_extension)
+    print y_extension,len(y_extension)
+    print z_extension,len(z_extension)
     #Need to order data,putting together coordinates based on atom type:
     ordered_x = []
     ordered_y = []
     ordered_z = []
-
+  
     start_index = 0
-    # Loops over x,y,z arrays and extensions to shift atom groups together
+  # Loops over x,y,z arrays and extensions to shift atom groups together
     for i in range(len(natom_list)):
    
         end_index = start_index + natom_list[i]
-       
         atom_xcart = []
         atom_xext = []
-
+ 
         atom_ycart = []
         atom_yext = []
-
+ 
         atom_zcart = []
         atom_zext = []
         #This loop changed "window" depending on the number of each type of atom 
@@ -85,20 +85,18 @@ def main():
 
             atom_xcart.append(x_cartesian[j]) #Extracts atom type i data from x_cartesian
             atom_xext.append(x_extension[j])  #Extracts atom type i data from x_extension
-
             atom_ycart.append(y_cartesian[j]) #Extracts atom type i data from y_cartesian
             atom_yext.append(y_extension[j])  #Extracts atom type i data from y_extension
 
            
             atom_zcart.append(z_cartesian[j]) #Extracts atom type i data from z_cartesian
             atom_zext.append(z_extension[j])  #Extracts atom type i data from z_extension
-
             start_index = end_index
 
         ordered_x.extend(atom_xcart + atom_xext) #Put all x data into correct order based on atom type
         ordered_y.extend(atom_ycart + atom_yext) #Puts together all atom type i ycoordinates
         ordered_z.extend(atom_zcart + atom_zext) #Puts together all atom type i zcoordinates
-    
+        print atom_xext
     #Formatting the output file to be POSCAR-like:
 
     #Writes out atom types on line 1:
