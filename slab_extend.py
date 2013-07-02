@@ -49,11 +49,15 @@ def main():
     y_extension = []
     z_extension = [] 
    
-    for i in range(3):  #Makes multiple copies of coordinates,need this to equal copies you want
-        for x in x_cartesian:
-           for j in range(3): #To order x coordinates,ie x = [1,2,3] becomes x = [1,1,1..,2,2,2..,3,3,3..,1+lat,1+lat..,2+lat..,3+lat..]
-               x_extension.append( x + i*x_lattice) #Copy cell in x-dir'n,thru shifting over by +ing multipules of latt const.
+   # for i in range(3):  #Makes multiple copies of coordinates,need this to equal copies you want
+       # for x in x_cartesian:
+          # for j in range(3): #To order x coordinates,ie x = [1,2,3] becomes x = [1,1,1..,2,2,2..,3,3,3..,1+lat,1+lat..,2+lat..,3+lat..]
+              # x_extension.append( x + i*x_lattice) #Copy cell in x-dir'n,thru shifting over by +ing multipules of latt const.
 
+    for x in x_cartesian:
+        for i in range(3):
+            for j in range(3):
+                x_extension.append( x + i*x_lattice) #Copy cell in x-dir'n,thru shifting over by +ing multipules of latt const.
     for y in y_cartesian:
         #Required to order y-coord, ie y = [1,2,3] becomes y = [1,1+lat,1+2*lat...,2,2+lat,...3,3+lat..]
         for i in range(3):
