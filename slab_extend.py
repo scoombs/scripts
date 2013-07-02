@@ -63,7 +63,9 @@ def main():
         for i in range(3):
             for j in range(3):
                 y_extension.append(y + j*y_lattice) #Copy cell in positive y-dir'n
-            for z in z_cartesian:
+    for z in z_cartesian:
+        for i in natom_list:
+            for j in range(3):
                 z_extension.append(z) #Make a copy of z
    
     print x_extension,len(x_extension)#length = total_natoms*ncopy^2
