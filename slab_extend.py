@@ -51,8 +51,8 @@ def main():
 
     for x in x_cartesian:
         for i in range(3):#Want to order x-coordinates in the following way: x =[1,2,3] becomes x = [1,1..,1+lat,1+lat..1+n*lat,1+n*lat..,2,2..,2+lat,2+lat..]
-          #  for j in range(3):
-            x_extension.append( x + i*x_lattice) #Copy cell in x-dir'n,thru shifting over by +ing multipules of latt const.
+            for j in range(3):
+                x_extension.append( x + i*x_lattice) #Copy cell in x-dir'n,thru shifting over by +ing multipules of latt const.
     for y in y_cartesian:
         #Required to order y-coord, ie y = [1,2,3] becomes y = [1,1+lat,1+2*lat...,2,2+lat,...3,3+lat..]
         for i in range(3):
