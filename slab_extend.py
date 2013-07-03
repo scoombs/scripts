@@ -14,7 +14,7 @@ def main():
         print '\nusage: '+program+' ncopy (where ncopy is an integer,number of desired cell copies)'
         #Exit program cleanly
         sys.exit(0)
-    inputfile = open('POSCARfundy', 'r') 
+    inputfile = open('POSCAR', 'r') 
     outputfile = open('extend_quartz90','w')
 
     #Read in line 1 of the POSCAR file:
@@ -57,20 +57,19 @@ def main():
     x_extension = []
     y_extension = []
     z_extension = [] 
-    for k in range(ncopy):
    
-        for x in x_cartesian:
-            for i in range(ncopy):#Want to order x-coordinates in the following way: x =[1,2,3] becomes x = [1,1..,1+lat,1+lat..1+n*lat,1+n*lat..,2,2..,2+lat,2+lat..]
-                for j in range(ncopy):
-                    x_extension.append( x + i*x_lattice) #Copy cell in x-dir'n,thru shifting over by +ing multipules of latt const.
-        for y in y_cartesian:
+    for x in x_cartesian:
+        for i in range(ncopy):#Want to order x-coordinates in the following way: x =[1,2,3] becomes x = [1,1..,1+lat,1+lat..1+n*lat,1+n*lat..,2,2..,2+lat,2+lat..]
+            for j in range(ncopy**2):
+                x_extension.append( x + i*x_lattice) #Copy cell in x-dir'n,thru shifting over by +ing multipules of latt const.
+    for y in y_cartesian:
         #Required to order y-coord, ie y = [1,2,3] becomes y = [1,1+lat,1+2*lat...,2,2+lat,...3,3+lat..]
-            for i in range(ncopy):
-                for j in range(ncopy):
-                    y_extension.append(y + j*y_lattice) #Copy cell in positive y-dir'n
-
-        for z in z_cartesian:
-            for i in range(ncopy):
+        for i in range(ncopy**2):
+            for j in range(ncopy):
+                y_extension.append(y + j*y_lattice) #Copy cell in positive y-dir'n
+    for z in z_cartesian:
+        for i in range(ncopy):
+            for k in range(ncopy):
                 for j in range(ncopy):# Want to order it so each copy of atomtype n has the original z coordinates
                     z_extension.append(z + k*z_lattice) #Make a copy of z
                     
