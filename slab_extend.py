@@ -4,9 +4,19 @@ import os,sys
 import numpy as np
 
 def main():
+ 
+    #allow user input of the number of desired copies,ncopy
+    try:
+        program = sys.argv[0] #Gives filename
+        ncopy = int(sys.argv[1])
+    except IndexError:
+        #Tell user what is required
+        print '\nusage: '+program+' ncopy (where ncopy is an integer,number of desired cell copies)'
+        #Exit program cleanly
+        sys.exit(0)
 
     inputfile = open('POSCARfundy', 'r')
-    outputfile = open('extend_POSCAR1','w')
+    outputfile = open('extend_POSCAR2','w')
 
     #Read in line 1 of the POSCAR file:
     atom_type = inputfile.readline().split() #atom_type = [atom1,atom2,atom3,etc]
@@ -44,28 +54,30 @@ def main():
     x_cartesian = [x * x_lattice for x in x_array] #Element wise multiplication
     y_cartesian = [y * y_lattice for y in y_array]
     z_cartesian = [z * z_lattice for z in z_array] 
-    print x_cartesian
+   # print x_cartesian
     x_extension = []
     y_extension = []
     z_extension = [] 
 
     for x in x_cartesian:
-        for i in range(3):#Want to order x-coordinates in the following way: x =[1,2,3] becomes x = [1,1..,1+lat,1+lat..1+n*lat,1+n*lat..,2,2..,2+lat,2+lat..]
-            for j in range(3):
+        for i in range(ncopy):#Want to order x-coordinates in the following way: x =[1,2,3] becomes x = [1,1..,1+lat,1+lat..1+n*lat,1+n*lat..,2,2..,2+lat,2+lat..]
+            for j in range(ncopy):
                 x_extension.append( x + i*x_lattice) #Copy cell in x-dir'n,thru shifting over by +ing multipules of latt const.
     for y in y_cartesian:
         #Required to order y-coord, ie y = [1,2,3] becomes y = [1,1+lat,1+2*lat...,2,2+lat,...3,3+lat..]
-        for i in range(3):
-            for j in range(3):
+        for i in range(ncopy):
+            for j in range(ncopy):
                 y_extension.append(y + j*y_lattice) #Copy cell in positive y-dir'n
+
     for z in z_cartesian:
-        for i in natom_list:# Want to order it so each copy of atomtype n has the original z coordinates 
-            for j in range(3):
+        for k in range(ncopy):
+            for i in range(ncopy):# Want to order it so each copy of atomtype n has the original z coordinates
                 z_extension.append(z) #Make a copy of z
    
-    print x_extension,len(x_extension)#length = total_natoms*ncopy^2
-    print y_extension,len(y_extension)
-    print z_extension,len(z_extension)
+   # print x_extension,len(x_extension)#length = total_natoms*ncopy^2
+   # print y_extension,len(y_extension)
+   # print z_extension,len(z_extension)
+
     #Need to order data,putting together coordinates based on atom type:
    # ordered_x = []
     #ordered_y = []
@@ -121,7 +133,7 @@ def main():
     outputfile.write('\n') #Skips to line 7
     #Writes out number of each atom on line 7:
     for i in range(len(natom_list)):
-        outputfile.write(' '+ ' '+ str(3**2*(natom_list[i])))#ADJUST THIS NUMBERING LATER,AFTER ASSIGNING A NAME TO NCOPY
+        outputfile.write(' '+ ' '+ str(ncopy**2*(natom_list[i])))#ADJUST THIS NUMBERING LATER,AFTER ASSIGNING A NAME TO NCOPY
 
     outputfile.write('\n' + str('Cartesian')+ '\n') #Writes Cartesian on line 8
      
