@@ -80,37 +80,36 @@ def main():
 
     #Need to order data,putting together coordinates based on atom type:
    # ordered_x = []
-    #ordered_y = []
+   # ordered_y = []
    # ordered_z = []
-    print len(natom_list)*ncopy**2
   
-    start_index = 0
+   # start_index = 0
   # Loops over x,y,z arrays and extensions to shift atom groups together
-    for i in range(len(natom_list)):
+   # for i in range(len(natom_list)):
    
-        end_index = start_index + ncopy**2*natom_list[i]
+    #    end_index = start_index + ncopy**2*natom_list[i]
         #atom_xcart = []
-      #  atom_xext = []
+     #   x_ext = []
  
         #atom_ycart = []
-       # atom_yext = []
+      #  y_ext = []
  
         #atom_zcart = []
-        #atom_zext = []
+       # z_ext = []
         #This loop changed "window" depending on the number of each type of atom 
-        for j in np.arange(start_index,end_index):
+        #for j in np.arange(start_index,end_index):
 
-            x_extension.append(x_extension[j])  #Extracts atom type i data from x_extension
+         #   x_ext.append(x_extension[j])  #Extracts atom type i data from x_extension
 
-            y_extension.append(y_extension[j])  #Extracts atom type i data from y_extension
+          #  y_ext.append(y_extension[j])  #Extracts atom type i data from y_extension
            
-            z_extension.append(z_extension[j])  #Extracts atom type i data from z_extension
+    #        z_ext.append(z_extension[j])  #Extracts atom type i data from z_extension
 
-            start_index = end_index
+     #       start_index = end_index
 
-        x_extension.extend(x_extension) #Put all x data into correct order based on atom type
-        y_extension.extend(y_extension) #Put all x data into correct order based on atom type
-        z_extension.extend(z_extension) #Put all x data into correct order based on atom type
+      #  ordered_x.extend(x_ext) #Put all x data into correct order based on atom type
+       # ordered_y.extend(y_ext) #Put all x data into correct order based on atom type
+        #ordered_z.extend(z_ext) #Put all x data into correct order based on atom type
        # ordered_y.extend( atom_yext) #Puts together all atom type i ycoordinates
        # ordered_z.extend( atom_zext) #Puts together all atom type i zcoordinates
    
