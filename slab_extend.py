@@ -14,9 +14,8 @@ def main():
         print '\nusage: '+program+' ncopy (where ncopy is an integer,number of desired cell copies)'
         #Exit program cleanly
         sys.exit(0)
-
-    inputfile = open('POSCARfundy', 'r')
-    outputfile = open('extend_POSCAR2','w')
+    inputfile = open('POSCARfundy', 'r') 
+    outputfile = open('extend_quartz90','w')
 
     #Read in line 1 of the POSCAR file:
     atom_type = inputfile.readline().split() #atom_type = [atom1,atom2,atom3,etc]
@@ -58,22 +57,23 @@ def main():
     x_extension = []
     y_extension = []
     z_extension = [] 
-
-    for x in x_cartesian:
-        for i in range(ncopy):#Want to order x-coordinates in the following way: x =[1,2,3] becomes x = [1,1..,1+lat,1+lat..1+n*lat,1+n*lat..,2,2..,2+lat,2+lat..]
-            for j in range(ncopy):
-                x_extension.append( x + i*x_lattice) #Copy cell in x-dir'n,thru shifting over by +ing multipules of latt const.
-    for y in y_cartesian:
-        #Required to order y-coord, ie y = [1,2,3] becomes y = [1,1+lat,1+2*lat...,2,2+lat,...3,3+lat..]
-        for i in range(ncopy):
-            for j in range(ncopy):
-                y_extension.append(y + j*y_lattice) #Copy cell in positive y-dir'n
-
-    for z in z_cartesian:
-        for k in range(ncopy):
-            for i in range(ncopy):# Want to order it so each copy of atomtype n has the original z coordinates
-                z_extension.append(z) #Make a copy of z
+    for k in range(ncopy):
    
+        for x in x_cartesian:
+            for i in range(ncopy):#Want to order x-coordinates in the following way: x =[1,2,3] becomes x = [1,1..,1+lat,1+lat..1+n*lat,1+n*lat..,2,2..,2+lat,2+lat..]
+                for j in range(ncopy):
+                    x_extension.append( x + i*x_lattice) #Copy cell in x-dir'n,thru shifting over by +ing multipules of latt const.
+        for y in y_cartesian:
+        #Required to order y-coord, ie y = [1,2,3] becomes y = [1,1+lat,1+2*lat...,2,2+lat,...3,3+lat..]
+            for i in range(ncopy):
+                for j in range(ncopy):
+                    y_extension.append(y + j*y_lattice) #Copy cell in positive y-dir'n
+
+        for z in z_cartesian:
+            for i in range(ncopy):
+                for j in range(ncopy):# Want to order it so each copy of atomtype n has the original z coordinates
+                    z_extension.append(z + k*z_lattice) #Make a copy of z
+                    
    # print x_extension,len(x_extension)#length = total_natoms*ncopy^2
    # print y_extension,len(y_extension)
    # print z_extension,len(z_extension)
@@ -82,12 +82,13 @@ def main():
    # ordered_x = []
     #ordered_y = []
    # ordered_z = []
+    print len(natom_list)*ncopy**2
   
-  #  start_index = 0
+    start_index = 0
   # Loops over x,y,z arrays and extensions to shift atom groups together
-    #for i in range(len(natom_list)):
+    for i in range(len(natom_list)):
    
-     #   end_index = start_index + natom_list[i]
+        end_index = start_index + ncopy**2*natom_list[i]
         #atom_xcart = []
       #  atom_xext = []
  
@@ -97,20 +98,19 @@ def main():
         #atom_zcart = []
         #atom_zext = []
         #This loop changed "window" depending on the number of each type of atom 
-       # for j in np.arange(start_index,end_index):
+        for j in np.arange(start_index,end_index):
 
-           # atom_xcart.append(x_cartesian[j]) #Extracts atom type i data from x_cartesian
-            #atom_xext.append(x_extension[j])  #Extracts atom type i data from x_extension
+            x_extension.append(x_extension[j])  #Extracts atom type i data from x_extension
 
-            #atom_ycart.append(y_cartesian[j]) #Extracts atom type i data from y_cartesian
-            #atom_yext.append(y_extension[j])  #Extracts atom type i data from y_extension
+            y_extension.append(y_extension[j])  #Extracts atom type i data from y_extension
            
-           # atom_zcart.append(z_cartesian[j]) #Extracts atom type i data from z_cartesian
-            #atom_zext.append(z_extension[j])  #Extracts atom type i data from z_extension
+            z_extension.append(z_extension[j])  #Extracts atom type i data from z_extension
 
-            #start_index = end_index
+            start_index = end_index
 
-        #ordered_x.extend( atom_xext) #Put all x data into correct order based on atom type
+        x_extension.extend(x_extension) #Put all x data into correct order based on atom type
+        y_extension.extend(y_extension) #Put all x data into correct order based on atom type
+        z_extension.extend(z_extension) #Put all x data into correct order based on atom type
        # ordered_y.extend( atom_yext) #Puts together all atom type i ycoordinates
        # ordered_z.extend( atom_zext) #Puts together all atom type i zcoordinates
    
@@ -122,9 +122,9 @@ def main():
         outputfile.write(str(atom_type[i]) + ' ')
    
     outputfile.write('\n'+ ' ' + ' ' + str(1.00000)+ '\n')#Writes a 1.00000 on line 2
-    outputfile.write(' ' + ' ' + str(x_lattice) +' '+ str(0.00) +' '+ str(0.00) + '\n') #Writes out x_lattice on line 3
-    outputfile.write(' ' + ' ' + str(0.00) +' '+ str(y_lattice) +' '+str(0.00) + '\n') #Writes y_lattice on line 4
-    outputfile.write(' ' + ' ' + str(0.00) +' '+ str(0.00) +' '+ str(z_lattice) + '\n') #Writes z_lattice on line 5
+    outputfile.write(' ' + ' ' + str(x_lattice*ncopy) +' '+ str(0.00) +' '+ str(0.00) + '\n') #Writes out x_lattice on line 3
+    outputfile.write(' ' + ' ' + str(0.00) +' '+ str(y_lattice*ncopy) +' '+str(0.00) + '\n') #Writes y_lattice on line 4
+    outputfile.write(' ' + ' ' + str(0.00) +' '+ str(0.00) +' '+ str(z_lattice*ncopy) + '\n') #Writes z_lattice on line 5
    
     #Writes out atom types on line 6: 
     for i in range(len(atom_type)):
@@ -133,7 +133,7 @@ def main():
     outputfile.write('\n') #Skips to line 7
     #Writes out number of each atom on line 7:
     for i in range(len(natom_list)):
-        outputfile.write(' '+ ' '+ str(ncopy**2*(natom_list[i])))#ADJUST THIS NUMBERING LATER,AFTER ASSIGNING A NAME TO NCOPY
+        outputfile.write(' '+ ' '+ str(ncopy**3*(natom_list[i])))#ADJUST THIS NUMBERING LATER,AFTER ASSIGNING A NAME TO NCOPY
 
     outputfile.write('\n' + str('Cartesian')+ '\n') #Writes Cartesian on line 8
      
