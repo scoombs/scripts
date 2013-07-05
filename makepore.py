@@ -13,41 +13,25 @@ def main():
         print '\n usage: '+program+' radius (where radius is in angstrom,1 nanometer = 10 angstrom)'
         sys.exit(0)
  
-    inputfile = open('test0.xyz','r')
-    outputfile = open('test_hole.xyz','w')
+    inputfile = open('test.xyz','r')
+    outputfile = open('testrand_hole.xyz','w')
    
     natoms = int(inputfile.readline().strip()) #Reads in number of atoms
-    #print natoms,type(natoms)
     inputfile.readline() #Skips line 2 (blank/comment line)
 
-    #First need to find the centre of the bulk given:
-    #Create 3 arrays: x,y,z
-   # x = []
-  #  y = []
-   # z = []
-    #for i in range(natoms):
-     #   line = inputfile.readline()
-      #  x.append(float(line.split()[1]))
-       # y.append(float(line.split()[2]))
-        #z.append(float(line.split()[3]))
     atoms = []
     for i in range(natoms):
         line = inputfile.readline()
-        #tmp = line.split() # Splits list
-       # tmp.pop(0) # Pops off first entry in each list (atom type)
         atoms.append(line.split()) # Appends lists of atom coordinates together
-    print atoms
+ 
     inputfile.close()
-    #COnvert elements to floats instead of strings: (Note: each 'row' is a set of coordinates for an atom: (TYPE,x,y,z))
+
+    #Convert elements to floats instead of strings: (Note: each 'row' is a set of coordinates for an atom: (TYPE,x,y,z))
     for row in atoms:
         for i in np.arange(1,len(row)):
             row[i] = float(row[i])
-    print atoms
-    inputfile.close()
-
-    
+  
     #First need to find the centre of the bulk given:
-   
     x_center = sum(row[1] for row in atoms)/natoms #Need to pick out the correct term, all the x's 
     y_center = sum(row[2] for row in atoms)/natoms
     z_center = sum(row[3] for row in atoms)/natoms
@@ -61,9 +45,9 @@ def main():
         y_pair_diff = abs(float(atom2[2] - y_center))
        # z_pair_diff = abs(float(atom2[2] - z_center))
         if x_pair_diff >= radius and y_pair_diff >= radius:
-            print atom2      
             outputfile.write( str(atom2[0]) + ' '+ str(atom2[1]) + ' ' + str(atom2[2]) + ' ' + str(atom2[3]) + '\n')
-    print 'Total number of atoms for output file =',range(atom2)
+   # print 'Total number of atoms for output file =',
+
     outputfile.close()
       
 if __name__=='__main__':
