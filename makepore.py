@@ -13,8 +13,8 @@ def main():
         print '\n usage: '+program+' radius (where radius is in angstrom,1 nanometer = 10 angstrom)'
         sys.exit(0)
  
-    inputfile = open('quartz324.xyz','r')
-    outputfile = open('with_pore.xyz','w')
+    inputfile = open('quartz12000.xyz','r')
+    outputfile = open('quartz12000_pore.xyz','w')
    
     natoms = int(inputfile.readline().strip()) #Reads in number of atoms
     inputfile.readline() #Skips line 2 (blank/comment line)
@@ -42,11 +42,8 @@ def main():
     for i in range(natoms):
         atom2 = atoms[i]
         pair_diff = abs(float(((atom2[1] - x_center)**2. + (atom2[2] - y_center)**2.)**(1./2.))) #Subtracts x-y Euclidean distances
-        #y_pair_diff = abs(float(atom2[2] - y_center))
-       # z_pair_diff = abs(float(atom2[2] - z_center))
-        if pair_diff >= radius: #and y_pair_diff >= radius:
+        if pair_diff >= radius: 
             outputfile.write( str(atom2[0]) + ' '+ str(atom2[1]) + ' ' + str(atom2[2]) + ' ' + str(atom2[3]) + '\n')
-   # print 'Total number of atoms for output file =',
 
     outputfile.close()
       
