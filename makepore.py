@@ -51,16 +51,18 @@ def main():
     y_center = sum(atoms[1])/natoms
     z_center = sum(atoms[2])/natoms
     print x_center,y_center,z_center
-   
+    
     #Circle's center is (x_center,y_center,z_center)
-    
-    
-   
-        
-    
-
-
-
-
+    #Will loop over distance b/w an atom & the center of the circle
+    for i in range(natoms):
+        atom2 = atoms[i]
+        x_pair_diff = abs(float(atom2[0] - x_center))
+        y_pair_diff = abs(float(atom2[1] - y_center))
+       # z_pair_diff = abs(float(atom2[2] - z_center))
+        if x_pair_diff >= radius and y_pair_diff >= radius:
+             outputfile.write( str(atom2[0]) + ' ' + str(atom2[1]) + ' ' + str(atom2[2]) + '\n')
+    outputfile.close()
+   print 'Total number of atoms for output file 
+      
 if __name__=='__main__':
     main() 
