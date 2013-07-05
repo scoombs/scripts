@@ -33,36 +33,38 @@ def main():
     atoms = []
     for i in range(natoms):
         line = inputfile.readline()
-        tmp = line.split() # Splits list
-        tmp.pop(0) # Pops off first entry in each list (atom type)
-        atoms.append(tmp) # Appends lists of atom coordinates together
+        #tmp = line.split() # Splits list
+       # tmp.pop(0) # Pops off first entry in each list (atom type)
+        atoms.append(line.split()) # Appends lists of atom coordinates together
     print atoms
     inputfile.close()
-    #COnvert elements to floats instead of strings:
+    #COnvert elements to floats instead of strings: (Note: each 'row' is a set of coordinates for an atom: (TYPE,x,y,z))
     for row in atoms:
-        for i in range(len(row)):
+        for i in np.arange(1,len(row)):
             row[i] = float(row[i])
     print atoms
     inputfile.close()
 
     
     #First need to find the centre of the bulk given:
-    x_center = sum(atoms[0])/natoms
-    y_center = sum(atoms[1])/natoms
-    z_center = sum(atoms[2])/natoms
+   
+    x_center = sum(row[1] for row in atoms)/natoms #Need to pick out the correct term, all the x's 
+    y_center = sum(row[2] for row in atoms)/natoms
+    z_center = sum(row[3] for row in atoms)/natoms
     print x_center,y_center,z_center
     
     #Circle's center is (x_center,y_center,z_center)
     #Will loop over distance b/w an atom & the center of the circle
     for i in range(natoms):
         atom2 = atoms[i]
-        x_pair_diff = abs(float(atom2[0] - x_center))
-        y_pair_diff = abs(float(atom2[1] - y_center))
+        x_pair_diff = abs(float(atom2[1] - x_center))
+        y_pair_diff = abs(float(atom2[2] - y_center))
        # z_pair_diff = abs(float(atom2[2] - z_center))
         if x_pair_diff >= radius and y_pair_diff >= radius:
-             outputfile.write( str(atom2[0]) + ' ' + str(atom2[1]) + ' ' + str(atom2[2]) + '\n')
+            print atom2      
+            outputfile.write( str(atom2[0]) + ' '+ str(atom2[1]) + ' ' + str(atom2[2]) + ' ' + str(atom2[3]) + '\n')
+    print 'Total number of atoms for output file =',range(atom2)
     outputfile.close()
-   print 'Total number of atoms for output file 
       
 if __name__=='__main__':
     main() 
