@@ -13,12 +13,25 @@ def main():
         print '\n usage: '+program+' radius (where radius of the hole is a float)'
         sys.exit(0)
  
-    inputfile = open('test.xyz','r')
+    inputfile = open('test0.xyz','r')
     outputfile = open('test_hole.xyz','w')
    
-    natoms = inputfile.readline().strip() #Reads in number of atoms
+    natoms = int(inputfile.readline().strip()) #Reads in number of atoms
+    #print natoms,type(natoms)
     inputfile.readline() #Skips line 2 (blank/comment line)
     
+    #First need to find the centre of the bulk given
+    x = []
+    y = []
+    z = []
+    for i in range(natoms):
+        line = inputfile.readline()
+        x.append(float(line.split()[1]))
+        y.append(float(line.split()[2]))
+        z.append(float(line.split()[3]))
+    print x,y,z
+    inputfile.close()
+        
     
 
 
