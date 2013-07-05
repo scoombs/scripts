@@ -19,8 +19,8 @@ def main():
     natoms = int(inputfile.readline().strip()) #Reads in number of atoms
     #print natoms,type(natoms)
     inputfile.readline() #Skips line 2 (blank/comment line)
-    
-    #First need to find the centre of the bulk given
+
+    #Create 3 arrays: x,y,z
     x = []
     y = []
     z = []
@@ -31,6 +31,16 @@ def main():
         z.append(float(line.split()[3]))
     print x,y,z
     inputfile.close()
+    
+    #First need to find the centre of the bulk given:
+    x_center = sum(x)/natoms
+    y_center = sum(y)/natoms
+    z_center = sum(z)/natoms
+    print x_center,y_center,z_center
+    #Define the cylinder to be removed along the length of z:
+    circle_volume = np.pi*radius**2.
+    
+   
         
     
 
