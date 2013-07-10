@@ -20,14 +20,16 @@ def main():
     try:
         program = sys.argv[0] #Gives filename
         radius = float(sys.argv[1])
-        lattice = float(sys.argv[2]) 
+        lattice = float(sys.argv[2])
+        width = float(sys.argv[3])
     except IndexError:
         #Tell user what is needed
-        print '\n usage: '+program+' radius lattice (where radius is in angstrom,1 nanometer = 10 angstrom)'
+        print '\n usage: '+program+' radius lattice width (where the units are in angstrom,1 nanometer = 10 angstrom)'
         sys.exit(0)
  
     inputfile = open('quartz324.xyz','r')
-    outputfile = open('324pore_pbcTEST.xyz','w')
+    pore_outputfile = open('TEST_324pore.xyz','w')
+    slab_outputfile = open('TEST_324slab.xyz','w')
    
     natoms = int(inputfile.readline().strip()) #Reads in number of atoms
     inputfile.readline() #Skips line 2 (blank/comment line)
@@ -43,7 +45,9 @@ def main():
     for row in atoms:
         for i in np.arange(1,len(row)):
             row[i] = float(row[i])
-  
+
+    #TO CREATE A PORE:
+ 
     #First need to find the centre of the bulk given:
     x_center = sum(row[1] for row in atoms)/natoms #Need to pick out the correct term, all the x's 
     y_center = sum(row[2] for row in atoms)/natoms
@@ -60,9 +64,26 @@ def main():
         pair_diff -= lattice*pbc_round(pair_diff/lattice)
 
         if pair_diff >= radius: 
-            outputfile.write( str(atom2[0]) + ' '+ str(atom2[1]) + ' ' + str(atom2[2]) + ' ' + str(atom2[3]) + '\n')
-    print  'Distance between pores is:',lattice - radius*2
-    outputfile.close()
-      
+            pore_outputfile.write( str(atom2[0]) + ' '+ str(atom2[1]) + ' ' + str(atom2[2]) + ' ' + str(atom2[3]) + '\n')
+    print  'Distance (angstrom) between pores is:',lattice - radius*2
+    pore_outputfile.close()
+    
+    #TO CREATE A SLAB:
+    z =[]
+    #First need to find the minumum z value:
+    for i in range(natoms):
+        atom = atoms[i]
+        z.append(float(atom[3]))
+    min_z = min(z)
+  
+    #Will loop over atoms & only write out those which are a z-distance < the desired width away from the min_z
+    for i in range(natoms):
+        atom = atoms[i]
+        z_diff = abs(float((atom[3] - min_z))) 
+        if z_diff <= width:
+            slab_outputfile.write( str(atom[0]) + ' '+ str(atom[1]) + ' ' + str(atom[2]) + ' ' + str(atom[3]) + '\n')
+    print 'The z-lattice constant for your new slab is:', width*3 
+    slab_outputfile.close
+ 
 if __name__=='__main__':
     main() 
