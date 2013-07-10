@@ -2,19 +2,32 @@
 #This program reads in an xyz file(units= angstrom) & removes a hole out of the centre with radius specified by user in angstroms
 import os,sys
 import numpy as np
+
+def pbc_round(input_value):
+    """
+This function is used for periodic boundary conditions,it rounds a value to the nearest integer.
+
+"""
+    i = int(input_value)
+    if (abs(input_value-i) >= 0.5):
+        if (input_value > 0): i+=1
+        if (input_value < 0): i-=1
+    return i
+
 def main():
     
     #Allow user input of hole radius:
     try:
         program = sys.argv[0] #Gives filename
         radius = float(sys.argv[1])
+        lattice = float(sys.argv[2]) 
     except IndexError:
         #Tell user what is needed
-        print '\n usage: '+program+' radius (where radius is in angstrom,1 nanometer = 10 angstrom)'
+        print '\n usage: '+program+' radius lattice (where radius is in angstrom,1 nanometer = 10 angstrom)'
         sys.exit(0)
  
-    inputfile = open('quartz12000.xyz','r')
-    outputfile = open('quartz12000_pore.xyz','w')
+    inputfile = open('quartz324.xyz','r')
+    outputfile = open('324pore_pbcTEST.xyz','w')
    
     natoms = int(inputfile.readline().strip()) #Reads in number of atoms
     inputfile.readline() #Skips line 2 (blank/comment line)
@@ -42,6 +55,10 @@ def main():
     for i in range(natoms):
         atom2 = atoms[i]
         pair_diff = abs(float(((atom2[1] - x_center)**2. + (atom2[2] - y_center)**2.)**(1./2.))) #Subtracts x-y Euclidean distances
+        
+        #Consider periodic boundary conditions,
+        pair_diff -= lattice*pbc_round(pair_diff/lattice)
+
         if pair_diff >= radius: 
             outputfile.write( str(atom2[0]) + ' '+ str(atom2[1]) + ' ' + str(atom2[2]) + ' ' + str(atom2[3]) + '\n')
 
