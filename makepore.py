@@ -48,7 +48,7 @@ def main():
     x_center = sum(row[1] for row in atoms)/natoms #Need to pick out the correct term, all the x's 
     y_center = sum(row[2] for row in atoms)/natoms
     z_center = sum(row[3] for row in atoms)/natoms
-    print x_center,y_center,z_center
+   # print x_center,y_center,z_center
     
     #Circle's center is (x_center,y_center,z_center)
     #Will loop over distance b/w an atom & the center of the circle
@@ -61,7 +61,7 @@ def main():
 
         if pair_diff >= radius: 
             outputfile.write( str(atom2[0]) + ' '+ str(atom2[1]) + ' ' + str(atom2[2]) + ' ' + str(atom2[3]) + '\n')
-
+    print  'Distance between pores is:',lattice - radius*2
     outputfile.close()
       
 if __name__=='__main__':
