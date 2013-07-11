@@ -35,13 +35,13 @@ def main():
 
     inputfile = open('TEST.xyz','r')
     outputfile = open('nn.dat','w')
-
-    natoms = int(inputfile.readline().strip()) #Readds in number of atoms 
-    inputfile.readline() #Reads line2, blank space
     
     distances = []
    
     for n in range(1): #Time step loop
+
+        natoms = int(inputfile.readline().strip()) #Reads in number of atoms 
+        inputfile.readline() #Reads line2, blank space
 
         atoms = []
         for i in range(natoms):
@@ -55,9 +55,9 @@ def main():
         for i in range(natoms): #Loops over first atom
             atom1 = atoms[i]
                                         
-            for j in range(natoms):#Loops over distances of atoms,doesn't account for duplicates
+            for j in range(natoms):#Loops over second atom,doesn't account for duplicates
                 atom2 = atoms[j]
-               # print 'atom1,atom2=', atom1,atom2 #Test is good,produces (natoms choose 2) combos everytime
+               # print 'atom1,atom2=', atom1,atom2 
           
                 #Finds the difference between x,y,z coordinates of each pair:
                 x_pair_diff = float(atom1[1]) - float(atom2[1])
@@ -71,15 +71,13 @@ def main():
                 z_pair_diff -= lattice_z*pbc_round(z_pair_diff/lattice_z)
                # print x_pair_diff
                 distances.append((x_pair_diff**2 + y_pair_diff**2 + z_pair_diff**2)**(1./2.))
-        distances = scipy.array(distances) 
-        distances = scipy.reshape(distances,(natoms,-1)) #unspecified value should assume to be natoms as well 
+        distances = scipy.array(distances) #Creates scipy array
+        distances = scipy.reshape(distances,(natoms,-1)) #Unspecified value should assume to be natoms as well 
         #Distances is square,symmetric matrix 
         print distances
 
-    
 
-
-
+   
 
 if __name__=='__main__':
      main()
