@@ -25,11 +25,12 @@ def main():
         lattice_x = lattice#float(sys.argv[2])
         lattice_y = lattice#float(sys.argv[3])
         lattice_z = float(sys.argv[2])
+        first_minimum = float(sys.argv[3])
        # nsteps = int(sys.argv[2])
      
     except IndexError:
         #Tell user what is needed
-        print '\nusage: '+program+' lattice z-lattice nsteps (where lattice & nsteps & nbins are floats)\n'
+        print '\nusage: '+program+' lattice z-lattice first_gr_minimum nsteps (where lattice & nsteps & nbins are floats)\n'
         #Exit program cleanly
         sys.exit(0)
 
@@ -75,7 +76,14 @@ def main():
         distances = scipy.reshape(distances,(natoms,-1)) #Unspecified value should assume to be natoms as well 
         #Distances is square,symmetric matrix 
         print distances
-
+    #Loop through the distance matrix & determine number of nearest neighbours per atom
+    nn = [] #nearest neighbours array
+    for i in range(natoms):#loop through rows
+        for j in range(natoms):#loop through each element in row
+            if distances[i,j] > 0.0001 and distances[i,j] < first_minimum:  #first minima of the g(r) function
+                nn.append(distances[i,j])
+                nn.count() 
+    print nn
 
    
 
