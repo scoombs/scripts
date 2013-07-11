@@ -20,19 +20,20 @@ def main():
     #Allow the user to input the periodic boundary condiotns (box size) and number of bins to be used:
     try:
         program =sys.argv[0] #Gives filename
-        lattice_x = int(sys.argv[1])
-        lattice_y = int(sys.argv[2])
-        lattice_z = int(sys.argv[3])
-        nsteps = int(sys.argv[4])
-        nbins = int(sys.argv[5])
+        lattice = float(sys.argv[1])
+        lattice_x = lattice #int(sys.argv[1])
+        lattice_y = lattice #int(sys.argv[2])
+        lattice_z = lattice #int(sys.argv[3])
+        nsteps = int(sys.argv[2])
+        nbins = int(sys.argv[3])
     except IndexError:
         #Tell user what is needed
-        print '\nusage: '+program+' lattice_x lattice_y lattice_z nsteps  nbins (where lattice & nsteps & nbins are integers)\n' 
+        print '\nusage: '+program+' lattice nsteps  nbins (where lattice & nsteps & nbins are integers)\n' 
         #Exit program cleanly
         sys.exit(0)
 
-    inputfile = open( 'bigtest.xyz' , 'r')
-    outfile = open('paircorr_data' , 'w')
+    inputfile = open( 'output_1000k_96_again.xyz' , 'r')
+    outfile = open('10000k_96_quartz_again' , 'w')
    
     #Timestep loop
     distances = []
@@ -71,28 +72,27 @@ def main():
                 distances.append((x_pair_diff**2 + y_pair_diff**2 + z_pair_diff**2)**(1./2.))
 #               print distances
    
-    hist,bin_edges = np.histogram(distances,bins=nbins, range=(0,lattice_x/2))
+    hist,bin_edges = np.histogram(distances,bins=nbins, range=(0,lattice/2))
+    hist = hist/float(nsteps) 
 
     #Prepares an x column,bin_edges and y_column hist, which can plot a histogram in gnuplot
     for i in range(len(hist)):
        # print bin_edges[i], hist[i]
 
         #Determine density of atoms that lie within donuts, dr, with inner radius r_right & outer r_left
-        bin_width = (lattice_x/2.)/(nbins)
+        bin_width = (lattice/2.)/(nbins)
         r_left = bin_edges[i]
         r_right = bin_width + r_left
        
-        dr = (4./3.)*np.pi*(r_right**3) - (4./3.)*np.pi*(r_left**3) #difference in volumes of 2 spheres 
+        vol_shell = (4./3.)*np.pi*(r_right**3) - (4./3.)*np.pi*(r_left**3) #difference in volumes of 2 spheres 
         #print dr
-        #According to wiki: use g(r) = 4*np.pi*r*dr
+        #According to wiki: use g(r) = 4*np.pi*r**2*dr, integrates to 4/3 pi (r_b**3 - r_a**3)
 
-        # VOLUME VS r PLOT stuff:
+        density = hist[i]/vol_shell
         r = (r_left + r_right)*(1./2.) #Average of bin,to be used in plot r vs v
-        v_bin = (4./3.)*np.pi*(r**3)
-#        print bin_edges[i],v_bin 
+        print r,density
 
-        density = hist[i]/dr
-        print bin_edges[i],density
+#        print bin_edges[i],vol_shell 
 
 # This executes main() only if executed from shell
 if __name__ == '__main__':
