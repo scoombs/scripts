@@ -78,12 +78,15 @@ def main():
         print distances
     #Loop through the distance matrix & determine number of nearest neighbours per atom
     nn = [] #nearest neighbours array
+    tmp = []
     for i in range(natoms):#loop through rows
-        for j in range(natoms):#loop through each element in row
+        for j in np.arange(natoms):#loop through each element in row
             if distances[i,j] > 0.0001 and distances[i,j] < first_minimum:  #first minima of the g(r) function
                 nn.append(distances[i,j])
-                nn.count() 
-    print nn
+                tmp = len(nn)
+                
+                
+        print nn,tmp
 
    
 
