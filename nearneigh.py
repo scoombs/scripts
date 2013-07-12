@@ -86,10 +86,14 @@ def main():
                 row_nn = len(tmp) #Determines the number of distances obeying if
         tmp[:] = [] #Clears tmp before moving to the next row
         nn.append(row_nn)#Creates an array with each row representing the count of nn for each atom1
-                
-                
-        print nn,tmp
+    print nn
+    
+    #Find the average number of nearest neighbours:
+    average_nn = np.mean(nn)
+    print 'The average number of nearest neighbours is:',average_nn
+    #Find the standard deviation:
 
+    
    
 
 if __name__=='__main__':
