@@ -28,8 +28,8 @@ def main():
         sys.exit(0)
  
     inputfile = open('quartz324.xyz','r')
-    pore_outputfile = open('TEST_324pore.xyz','w')
-    slab_outputfile = open('TEST_324slab.xyz','w')
+    pore_outputfile = open('pore.xyz','w')
+    slab_outputfile = open('slab.xyz','w')
    
     natoms = int(inputfile.readline().strip()) #Reads in number of atoms
     inputfile.readline() #Skips line 2 (blank/comment line)

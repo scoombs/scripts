@@ -38,7 +38,7 @@ def main():
        line =  inputfile.readline()
        outputfile.write(str(i) +' '+ str('1') +' ' + ' ' + line.strip() + '\n')
     #For the O atom, known now as atom 2
-    print natoms[1],natoms[2]
+#    print natoms[1],natoms[2]
     for j in np.arange(natoms[1]+1,natoms[1] + natoms[2]+1):
         line = inputfile.readline()
         outputfile.write(str(j) +' '+ str('2') +' ' + ' ' + line.strip() + '\n')

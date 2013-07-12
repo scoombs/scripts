@@ -34,13 +34,12 @@ def main():
         #Exit program cleanly
         sys.exit(0)
 
-    inputfile = open('TEST.xyz','r')
+    inputfile = open('quartz12000_pore.xyz','r')
    # outputfile = open('nn.dat','w')
     
-    distances = []#Have to initialize inside the loop since I turn it into a matrix
+    distances = []
     for n in range(nsteps): #Time step loop
 
-    #    distances = []#Have to initialize inside the loop since I turn it into a matrix
         natoms = int(inputfile.readline().strip()) #Reads in number of atoms 
         inputfile.readline() #Reads line2, blank space
 
@@ -48,8 +47,6 @@ def main():
         for i in range(natoms):
             line = inputfile.readline()
             atoms.append(line.split()) #Appends lists of atom coordinates [TYPE,x,y,z]
-       
-       # atoms = scipy.array(atoms) #Creates an n-d array 
        # print atoms
         
         #Loops to find the distance between two atoms:
@@ -70,7 +67,7 @@ def main():
                 x_pair_diff -= lattice_x*pbc_round(x_pair_diff/lattice_x)
                 y_pair_diff -= lattice_y*pbc_round(y_pair_diff/lattice_y)
                 z_pair_diff -= lattice_z*pbc_round(z_pair_diff/lattice_z)
-               # print x_pair_diff
+   
                 distances.append((x_pair_diff**2 + y_pair_diff**2 + z_pair_diff**2)**(1./2.))
    # print distances,len(distances)
     distances = scipy.array(distances) #Creates scipy array
@@ -89,7 +86,7 @@ def main():
                 row_nn = len(tmp) #Determines the number of distances obeying if
         tmp[:] = [] #Clears tmp before moving to the next row
         nn.append(row_nn)#Creates an array with each row representing the count of nn for each atom1
-   # print nn
+    
     
     #Find the average number of nearest neighbours:
     average_nn = np.mean(nn)
