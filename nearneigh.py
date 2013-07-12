@@ -26,7 +26,7 @@ def main():
         lattice_y = lattice#float(sys.argv[3])
         lattice_z = float(sys.argv[2])
         first_minimum = float(sys.argv[3])
-       # nsteps = int(sys.argv[2])
+        nsteps = int(sys.argv[4])
      
     except IndexError:
         #Tell user what is needed
@@ -34,12 +34,12 @@ def main():
         #Exit program cleanly
         sys.exit(0)
 
-    inputfile = open('TEST.xyz','r')
-    outputfile = open('nn.dat','w')
+    inputfile = open('300k_96.xyz','r')
+   # outputfile = open('nn.dat','w')
     
     distances = []
    
-    for n in range(1): #Time step loop
+    for n in range(nsteps): #Time step loop
 
         natoms = int(inputfile.readline().strip()) #Reads in number of atoms 
         inputfile.readline() #Reads line2, blank space
@@ -75,7 +75,8 @@ def main():
         distances = scipy.array(distances) #Creates scipy array
         distances = scipy.reshape(distances,(natoms,-1)) #Unspecified value should assume to be natoms as well 
         #Distances is square,symmetric matrix 
-        print distances
+       # print distances
+
     #Loop through the distance matrix & determine number of nearest neighbours per atom
     nn = [] #Nearest neighbours count array
     tmp = [] #Temporary array for nn distance storage
@@ -86,12 +87,15 @@ def main():
                 row_nn = len(tmp) #Determines the number of distances obeying if
         tmp[:] = [] #Clears tmp before moving to the next row
         nn.append(row_nn)#Creates an array with each row representing the count of nn for each atom1
-    print nn
+   # print nn
     
     #Find the average number of nearest neighbours:
     average_nn = np.mean(nn)
     print 'The average number of nearest neighbours is:',average_nn
-    #Find the standard deviation:
+    #Find the standard deviation: std = sqrt(mean(abs(x - x.mean())**2))
+    std_dev = np.std(nn,dtype = np.float64)
+    print 'The standard deviation is:',std_dev
+    
 
     
    
