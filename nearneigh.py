@@ -77,13 +77,15 @@ def main():
         #Distances is square,symmetric matrix 
         print distances
     #Loop through the distance matrix & determine number of nearest neighbours per atom
-    nn = [] #nearest neighbours array
-    tmp = []
-    for i in range(natoms):#loop through rows
-        for j in np.arange(natoms):#loop through each element in row
-            if distances[i,j] > 0.0001 and distances[i,j] < first_minimum:  #first minima of the g(r) function
-                nn.append(distances[i,j])
-                tmp = len(nn)
+    nn = [] #Nearest neighbours count array
+    tmp = [] #Temporary array for nn distance storage
+    for i in range(natoms):#Loop through rows
+        for j in np.arange(natoms):#Loop through each element in row
+            if distances[i,j] > 0.0001 and distances[i,j] < first_minimum:  #First minima of the g(r) function
+                tmp.append(distances[i,j]) #Extracts all distance in col. i that obey if statment
+                row_nn = len(tmp) #Determines the number of distances obeying if
+        tmp[:] = [] #Clears tmp before moving to the next row
+        nn.append(row_nn)#Creates an array with each row representing the count of nn for each atom1
                 
                 
         print nn,tmp
