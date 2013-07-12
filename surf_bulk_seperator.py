@@ -18,7 +18,6 @@ def main():
     filein = raw_input("Enter filename (xyz format):")
     inputfile = open(filein, 'r')
 
-   # inputfile = open('quartz324.xyz','r')
     surf_outputfile = open('surf.xyz','w')
     bulk_outputfile = open('bulk.xyz','w')
    
@@ -28,7 +27,6 @@ def main():
     for i in range(natoms):
         line = inputfile.readline()
         atoms.append(line.split()) # Appends lists of atom coordinates together
-   # print atoms
     inputfile.close()
 
     #Convert elements to floats instead of strings: (Note: each 'row' is a set of coordinates for an atom: (TYPE,x,y,z))
@@ -42,7 +40,8 @@ def main():
         atom = atoms[i]
         z.append(float(atom[3]))
     max_z = max(z)
-    print max_z
+    #print max_z
+
     #Loop over atoms & seperate them based on the "width" of surface given
     for i in range(natoms):
         atom = atoms[i]
