@@ -34,13 +34,13 @@ def main():
         #Exit program cleanly
         sys.exit(0)
 
-    inputfile = open('300k_96.xyz','r')
+    inputfile = open('TEST.xyz','r')
    # outputfile = open('nn.dat','w')
     
-    distances = []
-   
+    distances = []#Have to initialize inside the loop since I turn it into a matrix
     for n in range(nsteps): #Time step loop
 
+    #    distances = []#Have to initialize inside the loop since I turn it into a matrix
         natoms = int(inputfile.readline().strip()) #Reads in number of atoms 
         inputfile.readline() #Reads line2, blank space
 
@@ -72,11 +72,13 @@ def main():
                 z_pair_diff -= lattice_z*pbc_round(z_pair_diff/lattice_z)
                # print x_pair_diff
                 distances.append((x_pair_diff**2 + y_pair_diff**2 + z_pair_diff**2)**(1./2.))
-        distances = scipy.array(distances) #Creates scipy array
-        distances = scipy.reshape(distances,(natoms,-1)) #Unspecified value should assume to be natoms as well 
+    print distances,len(distances)
+    distances = scipy.array(distances) #Creates scipy array
+    print distances
+    distances = scipy.reshape(distances,(nsteps*natoms,-1)) #Unspecified value should assume to be natoms as well 
         #Distances is square,symmetric matrix 
-       # print distances
-
+    print distances
+    
     #Loop through the distance matrix & determine number of nearest neighbours per atom
     nn = [] #Nearest neighbours count array
     tmp = [] #Temporary array for nn distance storage
