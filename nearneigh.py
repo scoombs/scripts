@@ -34,9 +34,10 @@ def main():
         #Exit program cleanly
         sys.exit(0)
 
-    inputfile = open('quartz12000_pore.xyz','r')
-   # outputfile = open('nn.dat','w')
-    
+   #Allow user to input file name from terminal:
+    filein = raw_input("Enter filename (xyz format):")
+    inputfile = open(filein, 'r')
+ 
     distances = []
     for n in range(nsteps): #Time step loop
 
