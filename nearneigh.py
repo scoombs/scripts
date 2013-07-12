@@ -72,17 +72,17 @@ def main():
                 z_pair_diff -= lattice_z*pbc_round(z_pair_diff/lattice_z)
                # print x_pair_diff
                 distances.append((x_pair_diff**2 + y_pair_diff**2 + z_pair_diff**2)**(1./2.))
-    print distances,len(distances)
+   # print distances,len(distances)
     distances = scipy.array(distances) #Creates scipy array
-    print distances
+   # print distances
     distances = scipy.reshape(distances,(nsteps*natoms,-1)) #Unspecified value should assume to be natoms as well 
         #Distances is square,symmetric matrix 
-    print distances
+   # print distances
     
     #Loop through the distance matrix & determine number of nearest neighbours per atom
     nn = [] #Nearest neighbours count array
     tmp = [] #Temporary array for nn distance storage
-    for i in range(natoms):#Loop through rows
+    for i in range(nsteps*natoms):#Loop through rows
         for j in np.arange(natoms):#Loop through each element in row
             if distances[i,j] > 0.0001 and distances[i,j] < first_minimum:  #First minima of the g(r) function
                 tmp.append(distances[i,j]) #Extracts all distance in col. i that obey if statment
