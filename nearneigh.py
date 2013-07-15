@@ -54,13 +54,13 @@ def main():
             atoms.append(line.split()) #Appends lists of atom coordinates [TYPE,x,y,z]
         
         #Loops to find the distance between any two atoms(this is the general form, to specify atom type comment this loop out&see below)
-       # for i in range(natoms):
+       # for i in range(natoms): #Loops over first atom in the atom pairs
            # atom1 = atom[i]
 
         #*****Change loop to go over a specific first atom or type:*****
 
         #To loop over only **O** uncomment:
-        #for i in np.arange(natoms/3,natoms): #Loops over first atom
+        #for i in np.arange(natoms/3,natoms): 
            # atom1 = atoms[i] 
 
         #To loop over only **Si** instead just uncomment : 
