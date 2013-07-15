@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 #Program used to calculate differnt properties about atom's nearest neighbours
-
+#There is an option to calculate # nn for Si or O, need to uncomment & comment approporiate loops,described below
 import os,sys
 import numpy as np
 import scipy
@@ -49,25 +49,29 @@ def main():
         for i in range(natoms):
             line = inputfile.readline()
             atoms.append(line.split()) #Appends lists of atom coordinates [TYPE,x,y,z]
-       # print atoms
         
-        #Loops to find the distance between two atoms:
+        #Loops to find the distance between any two atoms:
+       # for i in range(natoms):
+           # atom1 = atom[i]
+
+        #*****Change loop to go over a specific first atom or type:*****
+
+        #To loop over only **O** uncomment:
         for i in np.arange(natoms/3,natoms): #Loops over first atom
-            atom1 = atoms[i] #Change this loop to go over a specific first atom or type
-           # print atom1
-       #Example1: for i in range(natoms/3): atom1 = atoms[i] , give just nn for Si****MUST MAKE /3 CHANGE IN 2 MORE SPOTS 
-       # Example2 :for i in range(natoms*2/3): atom1 = atoms[i], gives nn for just O*****MUST MAKE CHANGES IN 2 SAME 2 SPOTS
-       #Example3: Could also pick specific atom, say atom # 5 : atom1 = atoms[4]*****MUST MAKE CHANGES IN SAME TWO SPOTS
-                                        
+            atom1 = atoms[i] 
+
+        #To loop over only **Si** instead just uncomment : 
+        #for i in range(natoms/3):
+           # atom1 = atoms[i]
+        #*****************************************************************
+                                
             for j in range(natoms):#Loops over second atom,doesn't account for duplicates
                 atom2 = atoms[j]
-               # print 'atom1,atom2=', atom1,atom2 
           
                 #Finds the difference between x,y,z coordinates of each pair:
                 x_pair_diff = float(atom1[1]) - float(atom2[1])
                 y_pair_diff = float(atom1[2]) - float(atom2[2])
                 z_pair_diff = float(atom1[3]) - float(atom2[3])
-               # print 'atom1[i],atom2[i],x_pair_diff=',atom1[2], atom2[2],z_pair_diff
             
                 #Need to consider affects of periodic boundary conditions:
                 x_pair_diff -= lattice_x*pbc_round(x_pair_diff/lattice_x)
@@ -75,18 +79,28 @@ def main():
                 z_pair_diff -= lattice_z*pbc_round(z_pair_diff/lattice_z)
    
                 distances.append((x_pair_diff**2 + y_pair_diff**2 + z_pair_diff**2)**(1./2.))
-   # print len(distances)
     distances = scipy.array(distances) #Creates scipy array
-   # print distances
-    distances = scipy.reshape(distances,(nsteps*natoms*2/3,-1))#MUST /3 IF WANT ONLY Si,*2/3 IF WANT ONLY O 
-    #Unspecified value should assume to be natoms as well 
-    #Distances is square,symmetric matrix 
-   # print distances
     
+    #**********************************
+    distances = scipy.reshape(distances,(nsteps*natoms,-1))
+    #IF chose above to only calculate ***O*** nn,must uncomment this instead:
+    #distances = scipy.reshape(distances,(nsteps*natoms*2/3,-1)) 
+
+    #IF chose above to only calcuate ***Si*** nn must uncomment this instead:
+    #distances = scipy.reshape(distances,(nsteps*natoms/3,-1))
+
+    #Unspecified value should assume to be natoms  
+    #***********************************
+
     #Loop through the distance matrix & determine number of nearest neighbours per atom
     nn = [] #Nearest neighbours count array
     tmp = [] #Temporary array for nn distance storage
-    for i in range(nsteps*natoms*2/3):#Loop through rows #MUST /3 IF WANT ONLY Si, *2/3 IF WANT ONLY O
+    
+    #**********************************************
+    for i in range(nsteps*natoms*2/3):
+    # Change above range to range(nsteps*natoms*2/3) for just ***O*** OR range(nsteps*natoms/3) for just ***Si***
+    #***********************************************
+
         for j in np.arange(natoms):#Loop through each element in row
             if distances[i,j] > 0.0001 and distances[i,j] < first_minimum:  #First minima of the g(r) function
                 tmp.append(distances[i,j]) #Extracts all distance in col. i that obey if statement
