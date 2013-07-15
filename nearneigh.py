@@ -37,7 +37,8 @@ def main():
    #Allow user to input file name from terminal:
     filein = raw_input("Enter filename (xyz format):")
     inputfile = open(filein, 'r')
- 
+    
+    
     distances = []
     for n in range(nsteps): #Time step loop
 
@@ -51,16 +52,16 @@ def main():
        # print atoms
         
         #Loops to find the distance between two atoms:
-        for i in range(natoms/3): #Loops over first atom
+        for i in np.arange(natoms/3,natoms): #Loops over first atom
             atom1 = atoms[i] #Change this loop to go over a specific first atom or type
            # print atom1
-       #Example1: for i in range(natoms/3): atom1 = atoms[i] , give just nn for Si
-       # Example2 :for i in range(natoms*2/3): atom1 = atoms[i], gives nn for just O
-       #Example3: Could also pick specific atom, say atom # 5 : atom1 = atoms[4]
+       #Example1: for i in range(natoms/3): atom1 = atoms[i] , give just nn for Si****MUST MAKE /3 CHANGE IN 2 MORE SPOTS 
+       # Example2 :for i in range(natoms*2/3): atom1 = atoms[i], gives nn for just O*****MUST MAKE CHANGES IN 2 SAME 2 SPOTS
+       #Example3: Could also pick specific atom, say atom # 5 : atom1 = atoms[4]*****MUST MAKE CHANGES IN SAME TWO SPOTS
                                         
             for j in range(natoms):#Loops over second atom,doesn't account for duplicates
                 atom2 = atoms[j]
-                print 'atom1,atom2=', atom1,atom2 
+               # print 'atom1,atom2=', atom1,atom2 
           
                 #Finds the difference between x,y,z coordinates of each pair:
                 x_pair_diff = float(atom1[1]) - float(atom2[1])
@@ -74,17 +75,18 @@ def main():
                 z_pair_diff -= lattice_z*pbc_round(z_pair_diff/lattice_z)
    
                 distances.append((x_pair_diff**2 + y_pair_diff**2 + z_pair_diff**2)**(1./2.))
-    print len(distances)
+   # print len(distances)
     distances = scipy.array(distances) #Creates scipy array
    # print distances
-    distances = scipy.reshape(distances,(nsteps*natoms/3,-1)) #Unspecified value should assume to be natoms as well 
-        #Distances is square,symmetric matrix 
-    print distances
+    distances = scipy.reshape(distances,(nsteps*natoms*2/3,-1))#MUST /3 IF WANT ONLY Si,*2/3 IF WANT ONLY O 
+    #Unspecified value should assume to be natoms as well 
+    #Distances is square,symmetric matrix 
+   # print distances
     
     #Loop through the distance matrix & determine number of nearest neighbours per atom
     nn = [] #Nearest neighbours count array
     tmp = [] #Temporary array for nn distance storage
-    for i in range(nsteps*natoms/3):#Loop through rows
+    for i in range(nsteps*natoms*2/3):#Loop through rows #MUST /3 IF WANT ONLY Si, *2/3 IF WANT ONLY O
         for j in np.arange(natoms):#Loop through each element in row
             if distances[i,j] > 0.0001 and distances[i,j] < first_minimum:  #First minima of the g(r) function
                 tmp.append(distances[i,j]) #Extracts all distance in col. i that obey if statement
