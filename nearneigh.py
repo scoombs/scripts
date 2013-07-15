@@ -52,7 +52,11 @@ def main():
         
         #Loops to find the distance between two atoms:
         for i in range(natoms): #Loops over first atom
-            atom1 = atoms[i]
+            atom1 = atoms[i] #Change this loop to go over a specific first atom or type
+
+       #Example1: for i in range(natoms/3): atom1 = atoms[i] , give just nn for Si
+       # Example2 :for i in range(natoms*2/3): atom1 = atoms[i], gives nn for just O
+       #Example3: Could also pick specific atom, say atom # 5 : atom1 = atoms[4]
                                         
             for j in range(natoms):#Loops over second atom,doesn't account for duplicates
                 atom2 = atoms[j]
@@ -96,9 +100,6 @@ def main():
     std_dev = np.std(nn,dtype = np.float64)
     print 'The standard deviation is:',std_dev
     
-
-    
-   
 
 if __name__=='__main__':
      main()
