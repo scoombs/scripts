@@ -51,16 +51,16 @@ def main():
        # print atoms
         
         #Loops to find the distance between two atoms:
-        for i in range(natoms): #Loops over first atom
+        for i in range(natoms/3): #Loops over first atom
             atom1 = atoms[i] #Change this loop to go over a specific first atom or type
-
+           # print atom1
        #Example1: for i in range(natoms/3): atom1 = atoms[i] , give just nn for Si
        # Example2 :for i in range(natoms*2/3): atom1 = atoms[i], gives nn for just O
        #Example3: Could also pick specific atom, say atom # 5 : atom1 = atoms[4]
                                         
             for j in range(natoms):#Loops over second atom,doesn't account for duplicates
                 atom2 = atoms[j]
-               # print 'atom1,atom2=', atom1,atom2 
+                print 'atom1,atom2=', atom1,atom2 
           
                 #Finds the difference between x,y,z coordinates of each pair:
                 x_pair_diff = float(atom1[1]) - float(atom2[1])
@@ -74,20 +74,20 @@ def main():
                 z_pair_diff -= lattice_z*pbc_round(z_pair_diff/lattice_z)
    
                 distances.append((x_pair_diff**2 + y_pair_diff**2 + z_pair_diff**2)**(1./2.))
-   # print distances,len(distances)
+    print len(distances)
     distances = scipy.array(distances) #Creates scipy array
    # print distances
-    distances = scipy.reshape(distances,(nsteps*natoms,-1)) #Unspecified value should assume to be natoms as well 
+    distances = scipy.reshape(distances,(nsteps*natoms/3,-1)) #Unspecified value should assume to be natoms as well 
         #Distances is square,symmetric matrix 
-   # print distances
+    print distances
     
     #Loop through the distance matrix & determine number of nearest neighbours per atom
     nn = [] #Nearest neighbours count array
     tmp = [] #Temporary array for nn distance storage
-    for i in range(nsteps*natoms):#Loop through rows
+    for i in range(nsteps*natoms/3):#Loop through rows
         for j in np.arange(natoms):#Loop through each element in row
             if distances[i,j] > 0.0001 and distances[i,j] < first_minimum:  #First minima of the g(r) function
-                tmp.append(distances[i,j]) #Extracts all distance in col. i that obey if statment
+                tmp.append(distances[i,j]) #Extracts all distance in col. i that obey if statement
                 row_nn = len(tmp) #Determines the number of distances obeying if
         tmp[:] = [] #Clears tmp before moving to the next row
         nn.append(row_nn)#Creates an array with each row representing the count of nn for each atom1
