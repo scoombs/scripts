@@ -2,6 +2,8 @@
 
 #Program used to calculate differnt properties about atom's nearest neighbours
 #There is an option to calculate # nn for Si or O, need to uncomment & comment approporiate loops,described below
+#Look at the 3 areas in the code with **************** for further help
+
 import os,sys
 import numpy as np
 import scipy
@@ -35,6 +37,7 @@ def main():
         sys.exit(0)
 
    #Allow user to input file name from terminal:
+    print 'NOTE:Please see script for changes needed depending on wanting Si or O nearest neighbour claculations.'
     filein = raw_input("Enter filename (xyz format):")
     inputfile = open(filein, 'r')
     
@@ -50,19 +53,19 @@ def main():
             line = inputfile.readline()
             atoms.append(line.split()) #Appends lists of atom coordinates [TYPE,x,y,z]
         
-        #Loops to find the distance between any two atoms:
+        #Loops to find the distance between any two atoms(this is the general form, to specify atom type comment this loop out&see below)
        # for i in range(natoms):
            # atom1 = atom[i]
 
         #*****Change loop to go over a specific first atom or type:*****
 
         #To loop over only **O** uncomment:
-        for i in np.arange(natoms/3,natoms): #Loops over first atom
-            atom1 = atoms[i] 
+        #for i in np.arange(natoms/3,natoms): #Loops over first atom
+           # atom1 = atoms[i] 
 
         #To loop over only **Si** instead just uncomment : 
-        #for i in range(natoms/3):
-           # atom1 = atoms[i]
+        for i in range(natoms/3):
+            atom1 = atoms[i]
         #*****************************************************************
                                 
             for j in range(natoms):#Loops over second atom,doesn't account for duplicates
@@ -82,12 +85,13 @@ def main():
     distances = scipy.array(distances) #Creates scipy array
     
     #**********************************
-    distances = scipy.reshape(distances,(nsteps*natoms,-1))
+   #distances = scipy.reshape(distances,(nsteps*natoms,-1))
+
     #IF chose above to only calculate ***O*** nn,must uncomment this instead:
     #distances = scipy.reshape(distances,(nsteps*natoms*2/3,-1)) 
 
     #IF chose above to only calcuate ***Si*** nn must uncomment this instead:
-    #distances = scipy.reshape(distances,(nsteps*natoms/3,-1))
+    distances = scipy.reshape(distances,(nsteps*natoms/3,-1))
 
     #Unspecified value should assume to be natoms  
     #***********************************
@@ -97,7 +101,7 @@ def main():
     tmp = [] #Temporary array for nn distance storage
     
     #**********************************************
-    for i in range(nsteps*natoms*2/3):
+    for i in range(nsteps*natoms/3):
     # Change above range to range(nsteps*natoms*2/3) for just ***O*** OR range(nsteps*natoms/3) for just ***Si***
     #***********************************************
 
