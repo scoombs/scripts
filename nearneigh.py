@@ -55,7 +55,7 @@ def main():
         
         #Loops to find the distance between any two atoms(this is the general form, to specify atom type comment this loop out&see below)
        # for i in range(natoms): #Loops over first atom in the atom pairs
-           # atom1 = atom[i]
+           # atom1 = atoms[i]
 
         #*****Change loop to go over a specific first atom or type:*****
 
