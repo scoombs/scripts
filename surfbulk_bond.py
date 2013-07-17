@@ -99,14 +99,15 @@ def main():
         if z_diff > width:
            bulk.append(atom)
            bulk_dist = np.concatenate((bulk_dist,distances[i,:]))
-   # print bulk_dist
+    print bulk
+    print bulk_dist
    # print surf_dist
 
 
     #Find bond lengths in bulk:
     SiSi_b = [] #Si-Si bond lengths for bulk
-    SiO_b = [] #Si-O bond lengths for bulk
-    OO_b = []  # O-O bond lengths for bulk
+    SiO_b = []  #Si-O bond lengths for bulk
+    OO_b = []   #O-O bond lengths for bulk
     for i in range(len(bulk)): #Loop through all the rows in dist_bulk
         bulk_atoms = bulk[i]
 
@@ -119,7 +120,7 @@ def main():
             for j in np.arange(natoms/3,natoms): #Loop through all the O atoms, going down the row
                 if bulk_dist[i] > 0.0001 and bulk_dist[i] < 2: #Experiment says its 1.6A
                    SiO_b.append(bulk_dist[i]) # Extracts all distances b/w Si & O that obey if
-
+    print SiO_b
         #if bulk_atoms[0] == 'O':
     
             
@@ -128,9 +129,9 @@ def main():
     std_SiSi_b = np.std(SiSi_b,dtype = np.float64)
     print 'BULK: The average Si-Si bond length & standard deviation:',average_SiSi_b,std_SiSi_b
 
-    average_SiO_b = np.mean(SiO_b)
-    std_SiO_b = np.std(SiO_b,dtype = np.float64) 
-    print 'BULK: The average Si-O bond length & standard deviation:',average_SiO_b,std_SiO_b
+    #average_SiO_b = np.mean(SiO_b)
+    #std_SiO_b = np.std(SiO_b,dtype = np.float64) 
+    #print 'BULK: The average Si-O bond length & standard deviation:',average_SiO_b#,std_SiO_b
 
 
 
