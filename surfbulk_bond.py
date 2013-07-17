@@ -25,12 +25,12 @@ def main():
         lattice_x = lattice#float(sys.argv[2])
         lattice_y = lattice#float(sys.argv[3])
         lattice_z = float(sys.argv[2])
-        first_minimum = float(sys.argv[3])
+        width = float(sys.argv[3])
         nsteps = int(sys.argv[4])
      
     except IndexError:
         #Tell user what is needed
-        print '\nusage: '+program+' lattice z-lattice first_gr_minimum nsteps (all are floats,except nsteps is an integer)\n'
+        print '\nusage: '+program+' lattice z-lattice width(A) nsteps (all are floats,except nsteps is an integer)\n'
         #Exit program cleanly
         sys.exit(0)
 
@@ -66,7 +66,7 @@ def main():
         #Loops to find the distance between any two atoms
         for i in range(natoms): #Loops over first atom in the atom pairs
             atom1 = atoms[i]
-
+           # print atom1     
             for j in range(natoms):#Loops over second atom,doesn't account for duplicates
                 atom2 = atoms[j]
           
@@ -83,6 +83,27 @@ def main():
                 distances.append((x_pair_diff**2 + y_pair_diff**2 + z_pair_diff**2)**(1./2.))
     distances = scipy.array(distances) #Creates scipy array
     distances = scipy.reshape(distances,(nsteps*natoms,-1))#Reshapes array into a square matrix,undeclared should be natoms as well
+   # print distances
+
+    #Separate surface &  bulk:
+    surface = []
+    surf_dist = []
+    bulk = []
+    bulk_dist = []
+    for i in range(natoms):
+        atom = atoms[i]
+        z_diff = abs(float((atom[3] - max_z)))
+        if z_diff <= width:
+           surface.append(atom)
+           surf_dist.append(distances[i,j])
+   # print surface
+   # print surf_dist
+        if z_diff > width:
+           bulk.append(atom)
+           bulk_dist.append(distances[i,j])
+   # print bulk
+   # print bulk_dist
+    
     
     #Loop through to find Si-O bond lengths:
     SiO = []
@@ -90,6 +111,7 @@ def main():
         for j in np.arange(natoms/3,natoms):#Looks at O distances
             if distances[i,j] > 0.0001 and distances[i,j] < 2: #Experiment says it is 1.6 A, so I chose 2 A
                 SiO.append(distances[i,j]) #Extracts all distance bewteen Si & Si that obey if
+               
     average_SiO = np.mean(SiO)
     print 'The average Si-O bondlength is:',average_SiO
     std_SiO = np.std(SiO,dtype = np.float64)
