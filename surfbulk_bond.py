@@ -83,7 +83,7 @@ def main():
                 distances.append((x_pair_diff**2 + y_pair_diff**2 + z_pair_diff**2)**(1./2.))
     distances = scipy.array(distances) #Creates scipy array
     distances = scipy.reshape(distances,(nsteps*natoms,-1))#Reshapes array into a square matrix,undeclared should be natoms as well
-   # print distances
+    print distances
 
     #Separate surface &  bulk:
     surface = []
@@ -95,23 +95,20 @@ def main():
         z_diff = abs(float((atom[3] - max_z)))
         if z_diff <= width:
            surface.append(atom)
-           surf_dist.append(distances[i,j])
-   # print surface
-   # print surf_dist
+           surf_dist.append(distances[i,:])
         if z_diff > width:
            bulk.append(atom)
-           bulk_dist.append(distances[i,j])
-   # print bulk
-   # print bulk_dist
+           bulk_dist.np.append(distances[i,:])
+    print bulk_dist
     
-    
+    print surf_dist
     #Loop through to find Si-O bond lengths:
     SiO = []
-    for i in range(natoms/3): #Si are the first 3rd of atoms in xyz file (since we have SiO2)
-        for j in np.arange(natoms/3,natoms):#Looks at O distances
-            if distances[i,j] > 0.0001 and distances[i,j] < 2: #Experiment says it is 1.6 A, so I chose 2 A
-                SiO.append(distances[i,j]) #Extracts all distance bewteen Si & Si that obey if
-               
+    for i in range(len(bulk_dist)/3): #Si are the first 3rd of atoms in xyz file (since we have SiO2)
+        for j in np.arange(len(bulk_dist)/3,len(bulk_dist)):#Looks at O distances
+            if bulk_dist[i] > 0.0001 and bulk_dist[i] < 2: #Experiment says it is 1.6 A, so I chose 2 A
+                SiO.append(bulk_dist[i]) #Extracts all distance bewteen Si & Si that obey if
+            print SiO              
     average_SiO = np.mean(SiO)
     print 'The average Si-O bondlength is:',average_SiO
     std_SiO = np.std(SiO,dtype = np.float64)
