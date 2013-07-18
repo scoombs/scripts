@@ -98,9 +98,9 @@ def main():
     print 'surf = ',surface
 
     #Find bond lengths in surface:
-    SiSi_b = [] #Si-Si bond lengths for surface
-    SiO_b = []  #Si-O bond lengths for surface
-    OO_b = []   #O-O bond lengths for surface
+    SiSi_surf = [] #Si-Si bond lengths for surface
+    SiO_surf = []  #Si-O bond lengths for surface
+    OO_surf = []   #O-O bond lengths for surface
     for i in surface: #Loop through all the indices elements for location of atoms on surface in atoms list 
 
         if atoms[i][0] == 'Si':
@@ -112,19 +112,24 @@ def main():
             for j in np.arange(natoms/3,natoms): #Loop through all the O atoms, going down the row
                 if distances[i,j] > 0.0001 and distances[i,j] < 2: #Experiment says its 1.6A
                    SiO_surf.append(distances[i,j]) # Extracts all distances b/w Si & O that obey if
-   # print SiO_b
-        #if bulk_atoms[0] == 'O':
     
-            
-                 
-    average_SiSi_b = np.mean(SiSi_b)
-    std_SiSi_b = np.std(SiSi_b,dtype = np.float64)
-    print 'BULK: The average Si-Si bond length & standard deviation:',average_SiSi_b,std_SiSi_b
+        if atoms[i][0] == 'O':
+       
+            for j in np.arange(natoms/3,natoms): #Loops through all O atoms, going down the row
+                if distances[i,j] > 0.0001 and distances[i,j] < 3: #Experiment says its 2.6
+                 OO_surf.append(distances[i,j]) #Extracts distances b/w O-O obeying if
+  
+    average_SiSi_surf = np.mean(SiSi_surf)
+    std_SiSi_surf = np.std(SiSi_surf,dtype = np.float64)
+    print 'BULK: The average Si-Si bond length & standard deviation:',average_SiSi_surf,std_SiSi_surf
 
-    #average_SiO_b = np.mean(SiO_b)
-    #std_SiO_b = np.std(SiO_b,dtype = np.float64) 
-    #print 'BULK: The average Si-O bond length & standard deviation:',average_SiO_b#,std_SiO_b
+    average_SiO_surf = np.mean(SiO_surf)
+    std_SiO_surf = np.std(SiO_surf,dtype = np.float64) 
+    print 'BULK: The average Si-O bond length & standard deviation:',average_SiO_surf,std_SiO_surf
 
+    average_OO_surf = np.mean(OO_surf)
+    std_OO_surf = np.std(OO_surf,dtype = np.float64)
+    print 'SURFACE: The average O-O bond length & standard deviation:', average_OO_surf,std_SiO_surf
 
 
 if __name__=='__main__':
