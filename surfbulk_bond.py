@@ -85,11 +85,10 @@ def main():
     distances = scipy.reshape(distances,(nsteps*natoms,-1))#Reshapes array into a square matrix,undeclared should be natoms as well
     #print distances
     
-    #Separate surface &  bulk:
+    #Separate surface & bulk,captures indices for atoms that obey statements
     surface = []
     bulk = []
     for i in range(len(atoms)):
-        
         z_diff = abs(float((atoms[i][3] - max_z)))
         if z_diff <= width:
             surface.append(i)
@@ -98,22 +97,21 @@ def main():
     print'bulk=', bulk
     print 'surf = ',surface
 
-    #Find bond lengths in bulk:
-    SiSi_b = [] #Si-Si bond lengths for bulk
-    SiO_b = []  #Si-O bond lengths for bulk
-    OO_b = []   #O-O bond lengths for bulk
-    for i in range(len(bulk)): #Loop through all the rows in dist_bulk
-        bulk_atoms = bulk[i]
+    #Find bond lengths in surface:
+    SiSi_b = [] #Si-Si bond lengths for surface
+    SiO_b = []  #Si-O bond lengths for surface
+    OO_b = []   #O-O bond lengths for surface
+    for i in surface: #Loop through all the indices elements for location of atoms on surface in atoms list 
 
-        if bulk_atoms[0] == 'Si':
+        if atoms[i][0] == 'Si':
            
             for j in range(natoms/3):#Loop through all the Si atoms of dist_bulk, go down the row
-                if bulk_dist[i] > 0.0001 and bulk_dist[i] < 3.5: #Experiment says it is 3.06 A
-                    SiSi_b.append(bulk_dist[i]) #Extracts all distance bewteen Si & Si that obey if
+                if distances[i,j] > 0.0001 and distances[i,j] < 3.5: #Experiment says it is 3.06 A
+                    SiSi_surf.append(distances[i,j]) #Extracts all distance bewteen Si & Si that obey if
 
             for j in np.arange(natoms/3,natoms): #Loop through all the O atoms, going down the row
-                if bulk_dist[i] > 0.0001 and bulk_dist[i] < 2: #Experiment says its 1.6A
-                   SiO_b.append(bulk_dist[i]) # Extracts all distances b/w Si & O that obey if
+                if distances[i,j] > 0.0001 and distances[i,j] < 2: #Experiment says its 1.6A
+                   SiO_surf.append(distances[i,j]) # Extracts all distances b/w Si & O that obey if
    # print SiO_b
         #if bulk_atoms[0] == 'O':
     
