@@ -129,7 +129,7 @@ def main():
 
     average_OO_surf = np.mean(OO_surf)
     std_OO_surf = np.std(OO_surf,dtype = np.float64)
-    print 'SURFACE: The average O-O bond length & standard deviation:', average_OO_surf,std_SiO_surf
+    print 'SURFACE: The average O-O bond length & standard deviation:', average_OO_surf,std_OO_surf
   
     #Find bond lengths in bulk:
     SiSi_bulk = [] #Si-Si bond lengths for bulk
@@ -163,7 +163,7 @@ def main():
 
     average_OO_bulk = np.mean(OO_bulk)
     std_OO_bulk = np.std(OO_bulk,dtype = np.float64)
-    print 'BULK: The average O-O bond length & standard deviation:', average_OO_bulk,std_SiO_bulk
+    print 'BULK: The average O-O bond length & standard deviation:', average_OO_bulk,std_OO_bulk
 
 if __name__=='__main__':
      main()
