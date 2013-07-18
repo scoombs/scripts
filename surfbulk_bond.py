@@ -83,28 +83,20 @@ def main():
                 distances.append((x_pair_diff**2 + y_pair_diff**2 + z_pair_diff**2)**(1./2.))
     distances = scipy.array(distances) #Creates scipy array
     distances = scipy.reshape(distances,(nsteps*natoms,-1))#Reshapes array into a square matrix,undeclared should be natoms as well
-    print distances
-    print distances[0]
-
+    #print distances
+    
     #Separate surface &  bulk:
     surface = []
-    surf_dist = []
     bulk = []
-    bulk_dist = []
-    for i in range(natoms):
-        atom = atoms[i]
-        z_diff = abs(float((atom[3] - max_z)))
-       # print 'z_diff:',z_diff
+    for i in range(len(atoms)):
+        
+        z_diff = abs(float((atoms[i][3] - max_z)))
         if z_diff <= width:
-           surface.append(atom)
-           surf_dist = np.concatenate((surf_dist,distances[i]),1)#The 1 means itll add arrays as rows
-        if z_diff > width:
-           bulk.append(atom)
-           bulk_dist = np.concatenate((bulk_dist,distances[i]),1)
-   # print'bulk=', bulk
-    #print 'bulk_dis=',bulk_dist
-    print surf_dist
-
+            surface.append(i)
+        else:
+            bulk.append(i)
+    print'bulk=', bulk
+    print 'surf = ',surface
 
     #Find bond lengths in bulk:
     SiSi_b = [] #Si-Si bond lengths for bulk
@@ -122,7 +114,7 @@ def main():
             for j in np.arange(natoms/3,natoms): #Loop through all the O atoms, going down the row
                 if bulk_dist[i] > 0.0001 and bulk_dist[i] < 2: #Experiment says its 1.6A
                    SiO_b.append(bulk_dist[i]) # Extracts all distances b/w Si & O that obey if
-    #print SiO_b
+   # print SiO_b
         #if bulk_atoms[0] == 'O':
     
             
