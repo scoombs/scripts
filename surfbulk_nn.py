@@ -49,6 +49,20 @@ def main():
         for i in range(natoms):
             line = inputfile.readline()
             atoms.append(line.split()) #Appends lists of atom coordinates [TYPE,x,y,z]
+
+        #Convert elements to floats instead of strings: (Note: each 'row' is a set of coordinates for an atom: (TYPE,x,y,z))
+        for row in atoms:
+            for i in np.arange(1,len(row)):
+                row[i] = float(row[i])
+
+        #First find the maximum z value:
+        z = []
+        for i in range(natoms):
+            atom = atoms[i]
+            z.append(float(atom[3]))
+        max_z = max(z)
+        #print max_z
+
         #To loop over only Si:
         for i in range(natoms/3):
             atom1 = atoms[i]
@@ -70,6 +84,7 @@ def main():
     distances = scipy.array(distances) #Creates scipy array
     distances = scipy.reshape(distances,(nsteps*natoms/3,-1)) 
     #print distances
+
     
 
 
