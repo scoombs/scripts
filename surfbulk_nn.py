@@ -27,10 +27,11 @@ def main():
         lattice_z = float(sys.argv[2])
         first_minimum = float(sys.argv[3])
         nsteps = int(sys.argv[4])
+        width = float(sys.argv[5])
      
     except IndexError:
         #Tell user what is needed
-        print '\nusage: '+program+' lattice z-lattice first_gr_minimum nsteps (where lattice & nsteps & nbins are floats)\n'
+        print '\nusage: '+program+' lattice z-lattice first_gr_minimum nsteps width (where lattice & nsteps & nbins are floats)\n'
         #Exit program cleanly
         sys.exit(0)
 
@@ -43,6 +44,7 @@ def main():
     for n in range(nsteps): #Time step loop
 
         natoms = int(inputfile.readline().strip()) #Reads in number of atoms
+        print natoms
         inputfile.readline() #Reads line2, blank space
 
         atoms = []
@@ -61,10 +63,10 @@ def main():
             atom = atoms[i]
             z.append(float(atom[3]))
         max_z = max(z)
-        #print max_z
+        print max_z
 
-        #To loop over only Si:
-        for i in range(natoms/3):
+        #To loop over only all pairs of atoms:
+        for i in range(natoms):
             atom1 = atoms[i]
 
             for j in range(natoms):#Loops over second atom,doesn't account for duplicates
@@ -82,11 +84,35 @@ def main():
    
                 distances.append((x_pair_diff**2 + y_pair_diff**2 + z_pair_diff**2)**(1./2.))
     distances = scipy.array(distances) #Creates scipy array
-    distances = scipy.reshape(distances,(nsteps*natoms/3,-1)) 
-    #print distances
-
+    distances = scipy.reshape(distances,(nsteps*natoms,-1)) 
+   # print distances
+     #Separate surface & bulk,captures indices for atoms that obey statements
+    surface = []
+    bulk = []
+    for i in range(len(atoms)):
+        z_diff = abs(float((atoms[i][3] - max_z)))
+        if z_diff <= width:
+            surface.append(i)
+        else:
+            bulk.append(i)
+    print'bulk=', bulk
+    print 'surf = ',surface
     
+    tmp = []
+    nnSi_surface = []
+    for i in surface: # Loop through all surface atoms
+        if atoms[i][0] == 'Si':
+            print atoms[i]
+            if distances[i] > 0.0001 and distances[i] < first_minimum: #Finds nearest neighbours for surface Si
+                tmp.append(distance[i]) #Extracts all distances that obey if
+                print tmp
+                row = len(tmp) #Determines number of distances obeying if
+    tmp[:] = [] #Clears tmp before moving to the next row
+    nnSi_surface.append(row)
 
+    print nnSi_surface 
+    
+        
 
 if __name__=='__main__':
      main()
