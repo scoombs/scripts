@@ -117,6 +117,7 @@ def main():
                 if distances[i,j] > 0.0001 and distances[i,j] < first_minimum: #Finds nearest neighbours for surface O
                     tmp.append(distances[i]) #Extracts all distances that obey if
                     row = len(tmp) #Determines number of distances obeying if
+            tmp[:] = [] #clears tmp before moving to next row
             nnO_surface.append(row)
     print'nSi = ', nnSi_surface 
     print 'nO = ' , nnO_surface
