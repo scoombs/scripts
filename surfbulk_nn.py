@@ -98,6 +98,8 @@ def main():
     print'bulk=', bulk
     print 'surf = ',surface,len(surface),natoms
     
+    #NEAREST NEIGHBOURS FOR SURFACE ATOMS:
+
     tmp = []
     nnSi_surface = []
     nnO_surface = []
@@ -119,14 +121,32 @@ def main():
                     row = len(tmp) #Determines number of distances obeying if
             tmp[:] = [] #clears tmp before moving to next row
             nnO_surface.append(row)
-    print'nSi = ', nnSi_surface 
-    print 'nO = ' , nnO_surface
+    print'nn_Sisurface = ', nnSi_surface 
+    print 'nn_Osurface = ' , nnO_surface
+
     #Find avg number of Si surface nearest neighbours:
     nn_surfaceSi = np.mean(nnSi_surface)
     print 'The avg # of surface Si nearest neighbours is:',nn_surfaceSi
     #Find the avg number of O surface nearest neighbours: 
     nn_surfaceO = np.mean(nnO_surface)
-    print 'The avg # of surface O nearest neighbours is:',nn_surfaceO  
+    print 'The avg # of surface O nearest neighbours is:',nn_surfaceO 
+    
+    #NEAREST NEIGHBOURS FOR BULK ATOMS:    
+
+    nnSi_bulk = []
+    nnO_bulk = []
+    
+    for j in bulk: # Loop through all bulk atoms column indices
+        if atoms[j][0] == 'Si':
+            #print 'bulksi=',atoms[j]
+            for i in np.arange(natoms):
+                if distances[i,j] > 0.0001 and distances[i,j] < first_minimum: #Finds nearest neighbours for bulk Si
+                    tmp.append(distances[i]) #Extracts all distances that obey if
+                    row = len(tmp) #Determines number of distances obeying if
+            tmp[:] = [] #Clears tmp before moving to the next row
+            nnSi_bulk.append(row)
+
+ 
 
 if __name__=='__main__':
      main()
