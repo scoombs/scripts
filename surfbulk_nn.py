@@ -121,7 +121,12 @@ def main():
             nnO_surface.append(row)
     print'nSi = ', nnSi_surface 
     print 'nO = ' , nnO_surface
-        
+    #Find avg number of Si surface nearest neighbours:
+    nn_surfaceSi = np.mean(nnSi_surface)
+    print 'The avg # of surface Si nearest neighbours is:',nn_surfaceSi
+    #Find the avg number of O surface nearest neighbours: 
+    nn_surfaceO = np.mean(nnO_surface)
+    print 'The avg # of surface O nearest neighbours is:',nn_surfaceO  
 
 if __name__=='__main__':
      main()
