@@ -86,7 +86,8 @@ def main():
     distances = scipy.array(distances) #Creates scipy array
     distances = scipy.reshape(distances,(nsteps*natoms,-1)) 
    # print distances
-     #Separate surface & bulk,captures indices for atoms that obey statements
+
+    #Separate surface & bulk,captures indices for atoms that obey statements
     surface = []
     bulk = []
     for i in range(len(atoms)):
@@ -95,8 +96,8 @@ def main():
             surface.append(i) #This gives COLUMN indices for surface atoms
         else:
             bulk.append(i)
-    print'bulk=', bulk
-    print 'surf = ',surface,len(surface),natoms
+   # print'bulk=', bulk
+   # print 'surf = ',surface,len(surface),natoms
     
     #NEAREST NEIGHBOURS FOR SURFACE ATOMS:
 
@@ -121,8 +122,8 @@ def main():
                     row = len(tmp) #Determines number of distances obeying if
             tmp[:] = [] #clears tmp before moving to next row
             nnO_surface.append(row)
-    print'nn_Sisurface = ', nnSi_surface 
-    print 'nn_Osurface = ' , nnO_surface
+    #print'nn_Sisurface = ', nnSi_surface 
+    #print 'nn_Osurface = ' , nnO_surface
 
     #Find avg number of Si surface nearest neighbours:
     nn_surfaceSi = np.mean(nnSi_surface)
@@ -145,6 +146,23 @@ def main():
                     row = len(tmp) #Determines number of distances obeying if
             tmp[:] = [] #Clears tmp before moving to the next row
             nnSi_bulk.append(row)
+        else: #Will loop over remaining bulk atoms (the oxygens)
+            for i in range(natoms):
+                if distances[i,j] > 0.0001 and distances[i,j] < first_minimum: #Finds nearest neighbours for bulk  O
+                    tmp.append(distances[i]) #Extracts all distances that obey if
+                    row = len(tmp) #Determines number of distances obeying if
+            tmp[:] = [] #clears tmp before moving to next row
+            nnO_bulk.append(row)
+    #print 'nn_Sibulk =',nnSi_bulk
+    #print 'nn_Obulk =',nnO_bulk
+
+    #Find the avg number of Si bulk nn:
+    nn_bulkSi = np.mean(nnSi_bulk)
+    print 'The avg # of bulk Si nn is:',nn_bulkSi
+    #Find the avg number of O bulk nn:
+    nn_bulkO = np.mean(nnO_bulk)
+    print 'The avg # of bulk O nn is:',nn_bulkO
+
 
  
 
