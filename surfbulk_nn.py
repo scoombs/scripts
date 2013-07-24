@@ -66,7 +66,7 @@ def main():
        # print max_z
 
         #To loop over only all pairs of atoms:
-        for i in range(natoms):#CHANGING TO LOOP OVER si ONLY
+        for i in range(natoms):
             atom1 = atoms[i]
 
             for j in range(natoms):#Loops over second atom,doesn't account for duplicates
@@ -84,8 +84,8 @@ def main():
    
                 distances.append((x_pair_diff**2 + y_pair_diff**2 + z_pair_diff**2)**(1./2.))
     distances = scipy.array(distances) #Creates scipy array
-    distances = scipy.reshape(distances,(nsteps*natoms,-1)) #CHANGED FOR Si atoms only
-    print distances
+    distances = scipy.reshape(distances,(nsteps*natoms,-1)) 
+   # print distances
      #Separate surface & bulk,captures indices for atoms that obey statements
     surface = []
     bulk = []
@@ -100,20 +100,26 @@ def main():
     
     tmp = []
     nnSi_surface = []
+    nnO_surface = []
     for j in surface: # Loop through all surface atoms column indices
         if atoms[j][0] == 'Si':
-            print atoms[j]
+           # print atoms[j]
             for i in np.arange(natoms):
-                print distances[i,j]
+                #print distances[i,j]
                 if distances[i,j] > 0.0001 and distances[i,j] < first_minimum: #Finds nearest neighbours for surface Si
                     tmp.append(distances[i]) #Extracts all distances that obey if
                     #print tmp
                     row = len(tmp) #Determines number of distances obeying if
             tmp[:] = [] #Clears tmp before moving to the next row
             nnSi_surface.append(row)
-
-   # print'nSi = ', nnSi_surface 
-    
+        else: #Will loop over remaining surface atoms (the oxygens)
+            for i in range(natoms):
+                if distances[i,j] > 0.0001 and distances[i,j] < first_minimum: #Finds nearest neighbours for surface O
+                    tmp.append(distances[i]) #Extracts all distances that obey if
+                    row = len(tmp) #Determines number of distances obeying if
+            nnO_surface.append(row)
+    print'nSi = ', nnSi_surface 
+    print 'nO = ' , nnO_surface
         
 
 if __name__=='__main__':
