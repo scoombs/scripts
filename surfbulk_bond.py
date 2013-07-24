@@ -102,9 +102,10 @@ def main():
     SiO_surf = []  #Si-O bond lengths for surface
     OO_surf = []   #O-O bond lengths for surface
     for i in surface: #Loop through all the indices elements for location of atoms on surface in atoms list 
-
+       
         if atoms[i][0] == 'Si':
-           
+           # print atoms[i]
+           # print 'i=',i
             for j in range(natoms/3):#Loop through all the Si atoms in surface
                 if distances[i,j] > 0.0001 and distances[i,j] < 3.5: #Experiment says it is 3.06 A
                     SiSi_surf.append(distances[i,j]) #Extracts all distance bewteen Si & Si that obey if
@@ -118,7 +119,7 @@ def main():
             for j in np.arange(natoms/3,natoms): #Loops through all O atoms, going down the row
                 if distances[i,j] > 0.0001 and distances[i,j] < 3: #Experiment says its 2.6
                  OO_surf.append(distances[i,j]) #Extracts distances b/w O-O obeying if
-  
+    print '\n'  
     average_SiSi_surf = np.mean(SiSi_surf)
     std_SiSi_surf = np.std(SiSi_surf,dtype = np.float64)
     print 'SURFACE: The average Si-Si bond length & standard deviation:',average_SiSi_surf,std_SiSi_surf
@@ -130,13 +131,13 @@ def main():
     average_OO_surf = np.mean(OO_surf)
     std_OO_surf = np.std(OO_surf,dtype = np.float64)
     print 'SURFACE: The average O-O bond length & standard deviation:', average_OO_surf,std_OO_surf
-  
+    print '\n' 
     #Find bond lengths in bulk:
     SiSi_bulk = [] #Si-Si bond lengths for bulk
     SiO_bulk = [] #Si-O bond lengths for bulk
     OO_bulk = [] #O-O bond lengths for bulk
     for i in bulk: #Loop through all the indices elements for location of atoms on surface in atoms list
-
+        
         if atoms[i][0] == 'Si':
            
             for j in range(natoms/3):#Loop through all the Si atoms of bulk
@@ -164,6 +165,7 @@ def main():
     average_OO_bulk = np.mean(OO_bulk)
     std_OO_bulk = np.std(OO_bulk,dtype = np.float64)
     print 'BULK: The average O-O bond length & standard deviation:', average_OO_bulk,std_OO_bulk
+    print '\n'
 
 if __name__=='__main__':
      main()
