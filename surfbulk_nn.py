@@ -44,14 +44,14 @@ def main():
     for n in range(nsteps): #Time step loop
 
         natoms = int(inputfile.readline().strip()) #Reads in number of atoms
-        print natoms
+        #print natoms
         inputfile.readline() #Reads line2, blank space
 
         atoms = []
         for i in range(natoms):
             line = inputfile.readline()
             atoms.append(line.split()) #Appends lists of atom coordinates [TYPE,x,y,z]
-
+        print atoms
         #Convert elements to floats instead of strings: (Note: each 'row' is a set of coordinates for an atom: (TYPE,x,y,z))
         for row in atoms:
             for i in np.arange(1,len(row)):
@@ -63,10 +63,10 @@ def main():
             atom = atoms[i]
             z.append(float(atom[3]))
         max_z = max(z)
-        print max_z
+       # print max_z
 
         #To loop over only all pairs of atoms:
-        for i in range(natoms):
+        for i in range(natoms/3):#CHANGING TO LOOP OVER si ONLY
             atom1 = atoms[i]
 
             for j in range(natoms):#Loops over second atom,doesn't account for duplicates
@@ -84,33 +84,35 @@ def main():
    
                 distances.append((x_pair_diff**2 + y_pair_diff**2 + z_pair_diff**2)**(1./2.))
     distances = scipy.array(distances) #Creates scipy array
-    distances = scipy.reshape(distances,(nsteps*natoms,-1)) 
-   # print distances
+    distances = scipy.reshape(distances,(nsteps*natoms/3,-1)) #CHANGED FOR Si atoms only
+    print distances
      #Separate surface & bulk,captures indices for atoms that obey statements
     surface = []
     bulk = []
     for i in range(len(atoms)):
         z_diff = abs(float((atoms[i][3] - max_z)))
         if z_diff <= width:
-            surface.append(i)
+            surface.append(i) #This gives COLUMN indices for surface atoms
         else:
             bulk.append(i)
     print'bulk=', bulk
-    print 'surf = ',surface
+    print 'surf = ',surface,len(surface),natoms
     
     tmp = []
     nnSi_surface = []
-    for i in surface: # Loop through all surface atoms
-        if atoms[i][0] == 'Si':
-            print atoms[i]
-            if distances[i] > 0.0001 and distances[i] < first_minimum: #Finds nearest neighbours for surface Si
-                tmp.append(distance[i]) #Extracts all distances that obey if
-                print tmp
+    for j in surface: # Loop through all surface atoms column indices
+      #  if atoms[i][0] == 'Si':
+          #  print atoms[i]
+        for i in np.arange(natoms/3):
+            print distances[i,j]
+            if distances[i,j] > 0.0001 and distances[i,j] < first_minimum: #Finds nearest neighbours for surface Si
+                tmp.append(distances[i]) #Extracts all distances that obey if
+                #print tmp
                 row = len(tmp) #Determines number of distances obeying if
-    tmp[:] = [] #Clears tmp before moving to the next row
-    nnSi_surface.append(row)
+        tmp[:] = [] #Clears tmp before moving to the next row
+        nnSi_surface.append(row)
 
-    print nnSi_surface 
+    print'nSi = ', nnSi_surface 
     
         
 
