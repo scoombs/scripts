@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-#Program reads in an SiO2 xyz file & calculates number of nearest neighbours in surface Si & bulk Si atoms
+
+#Program reads in an SiO2 xyz file & calculates number of nearest neighbours in surface Si,O & bulk Si,O atoms
 
 import os,sys
 import numpy as np
