@@ -8,9 +8,9 @@ import scipy
 
 def pbc_round(input_value):
     """
-This function is used for periodic boundary conditions,it rounds a value to the nearest integer.
+    This function is used for periodic boundary conditions,it rounds a value to the nearest integer.
 
-"""
+    """
     i = int(input_value)
     if (abs(input_value-i) >= 0.5):
         if (input_value > 0): i+=1
@@ -45,7 +45,7 @@ def main():
     for n in range(nsteps): #Time step loop
 
         natoms = int(inputfile.readline().strip()) #Reads in number of atoms
-        #print natoms
+        print natoms
         inputfile.readline() #Reads line2, blank space
 
         atoms = []
@@ -59,12 +59,10 @@ def main():
                 row[i] = float(row[i])
 
         #First find the centre of the pore:
-         x_center = sum(row[1] for row in atoms)/natoms #Need to pick out the correct term, all the x's
-         y_center = sum(row[2] for row in atoms)/natoms
-         z_center = sum(row[3] for row in atoms)/natoms
-         print x_center,y_center,z_center
-       
-       
+        x_center = sum(row[1] for row in atoms)/natoms #Need to pick out the correct term, all the x's
+        y_center = sum(row[2] for row in atoms)/natoms
+        z_center = sum(row[3] for row in atoms)/natoms
+        print x_center,y_center,z_center
 
         #To loop over only all pairs of atoms:
         for i in range(natoms):
@@ -86,19 +84,19 @@ def main():
                 distances.append((x_pair_diff**2 + y_pair_diff**2 + z_pair_diff**2)**(1./2.))
     distances = scipy.array(distances) #Creates scipy array
     distances = scipy.reshape(distances,(nsteps*natoms,-1))
-   # print distances
+    #print distances
 
     #Separate surface & bulk surrounding pore,captures indices for atoms that obey statements
     surface = []
     bulk = []
     for i in range(len(atoms)):
-        z_diff = abs(float((atoms[i][3] - max_z)))
-        if z_diff <= width:
+        center_diff = abs(float((atoms[i][1]**2 + atoms[i][2]**2 + atoms[i][3]**2)**(1./2.) - (x_center**2 +y_center**2 + z_center**2)**(1./2.)))
+        if center_diff <= radius:
             surface.append(i) #This gives COLUMN indices for surface atoms
         else:
             bulk.append(i)
-   # print'bulk=', bulk
-   # print 'surf = ',surface,len(surface),natoms
+    print'bulk=', bulk
+    print 'surf = ',surface,len(surface),natoms
     
  
 
