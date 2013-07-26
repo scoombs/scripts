@@ -98,7 +98,37 @@ def main():
     print'bulk=', bulk
     print 'surf = ',surface,len(surface),natoms
     
- 
+   #NEAREST NEIGHBOURS FOR SURFACE ATOMS:
+
+    tmp = []
+    nnSi_surface = []
+    nnO_surface = []
+    for j in surface: # Loop through all surface atoms column indices
+        if atoms[j][0] == 'Si':
+           # print atoms[j]
+            for i in np.arange(natoms):
+                #print distances[i,j]
+                if distances[i,j] > 0.0001 and distances[i,j] < first_minimum: #Finds nearest neighbours for surface Si
+                    tmp.append(distances[i]) #Extracts all distances that obey if
+                    #print tmp
+                    row = len(tmp) #Determines number of distances obeying if
+            tmp[:] = [] #Clears tmp before moving to the next row
+            nnSi_surface.append(row)
+        else: #Will loop over remaining surface atoms (the oxygens)
+            for i in range(natoms):
+                if distances[i,j] > 0.0001 and distances[i,j] < first_minimum: #Finds nearest neighbours for surface O
+                    tmp.append(distances[i]) #Extracts all distances that obey if
+                    row = len(tmp) #Determines number of distances obeying if
+            tmp[:] = [] #clears tmp before moving to next row
+            nnO_surface.append(row)
+
+    #Find avg number of Si surface nearest neighbours:
+    nn_surfaceSi = np.mean(nnSi_surface)
+    print 'The avg # of surface Si nearest neighbours is:',nn_surfaceSi
+    #Find the avg number of O surface nearest neighbours:
+    nn_surfaceO = np.mean(nnO_surface)
+    print 'The avg # of surface O nearest neighbours is:',nn_surfaceO    
+  
 
 if __name__=='__main__':
      main()
