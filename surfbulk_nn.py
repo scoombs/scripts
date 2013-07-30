@@ -123,14 +123,15 @@ def main():
                     row = len(tmp) #Determines number of distances obeying if
             tmp[:] = [] #clears tmp before moving to next row
             nnO_surface.append(row)
-    #print'nn_Sisurface = ', nnSi_surface 
+    print'nn_Sisurface = ', nnSi_surface 
     #print 'nn_Osurface = ' , nnO_surface
-
+    
+    print type(nnSi_surface[0]) 
     #Find avg number of Si surface nearest neighbours:
-    nn_surfaceSi = np.mean(nnSi_surface)
-    print 'The avg # of surface Si nearest neighbours is:',nn_surfaceSi
+    nn_surfaceSi = np.mean(nnSi_surface,dtype = np.float64)
+    print 'The avg # of surface Si nearest neighbours is:', nn_surfaceSi, type(nn_surfaceSi)
     #Find the avg number of O surface nearest neighbours: 
-    nn_surfaceO = np.mean(nnO_surface)
+    nn_surfaceO = np.mean(nnO_surface,dtype = np.float64)
     print 'The avg # of surface O nearest neighbours is:',nn_surfaceO 
     
     #NEAREST NEIGHBOURS FOR BULK ATOMS:    
@@ -158,10 +159,10 @@ def main():
     #print 'nn_Obulk =',nnO_bulk
 
     #Find the avg number of Si bulk nn:
-    nn_bulkSi = np.mean(nnSi_bulk)
+    nn_bulkSi = np.mean(nnSi_bulk,dtype = np.float64)
     print 'The avg # of bulk Si nn is:',nn_bulkSi
     #Find the avg number of O bulk nn:
-    nn_bulkO = np.mean(nnO_bulk)
+    nn_bulkO = np.mean(nnO_bulk,dtype = np.float64)
     print 'The avg # of bulk O nn is:',nn_bulkO
 
 
