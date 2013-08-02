@@ -39,17 +39,22 @@ def main():
     inputfile = open(filein, 'r')
     
     
+    atoms_alltimesteps = []
     distances = []
     for n in range(nsteps): #Time step loop
 
         natoms = int(inputfile.readline().strip()) #Reads in number of atoms 
         inputfile.readline() #Reads line2, blank space
-        allatoms = []
+       
         atoms = []
         for i in range(natoms):
             line = inputfile.readline()
-            atoms.append(line.split()) #Appends lists of atom coordinates [TYPE,x,y,z]
-        
+            atoms.append(line.split()) #Appends lists of atom coordinates [TYPE,x,y,z],to be used in distances array
+
+        atoms_alltimesteps.extend(atoms) #Appends atom coordinates together for ALL timesteps, to be used in histogram
+    #print atoms_alltimesteps, len(atoms_alltimesteps)
+
+    for n in range(nsteps):#Time step loop for distance matrix     
         #Loops to find the distance between any two atoms
         for i in range(natoms): #Loops over first atom in the atom pairs
             atom1 = atoms[i]
