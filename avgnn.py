@@ -21,16 +21,18 @@ def main():
      #Allow the user to input the periodic boundary conditions (box size) and number of timesteps to be used:
     try:
         program =sys.argv[0] #Gives filename
+
         lattice = float(sys.argv[1])
         lattice_x = lattice#float(sys.argv[2])
         lattice_y = lattice#float(sys.argv[3])
         lattice_z = float(sys.argv[2])
+
         first_minimum = float(sys.argv[3])
         nsteps = int(sys.argv[4])
-     
+        nbins = float(sys.argv[5]))
     except IndexError:
         #Tell user what is needed
-        print '\nusage: '+program+' lattice z-lattice first_gr_minimum nsteps (where lattice & nsteps & nbins are floats)\n'
+        print '\nusage: '+program+' lattice z-lattice first_gr_minimum nsteps nbins \n'
         #Exit program cleanly
         sys.exit(0)
 
@@ -90,7 +92,21 @@ def main():
         tmp[:] = [] #Clears tmp before moving to the next row
         nn.append(row_nn)#Creates an array with each row representing the count of nn for each atom1
         #print nn
-    #numpy. histogram(nn,
+    
+    hist,bin_edges = np.histogram(nn,bins = nbins,range = (0,z_lattice))
+    hist = hist/float(nsteps)
+    
+    for i in range(len(hist)):
+        
+        #Defining variables for ease of understanding
+        bin_width = (z_lattice)/(nbins)
+        left = bin_edges[i] 
+        right = bin_edges[i] + left
+
+        #Determine which atom's nn count belongs in which bin based on its z-coordinate
+          
+        #Average of bin size, to be used as x-axis when plotting!
+        middle = (left + right)/2.  
     
     #Find the average number of nearest neighbours:
     average_nn = np.mean(nn)
