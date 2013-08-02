@@ -32,7 +32,7 @@ def main():
         #Exit program cleanly
         sys.exit(0)
 
-    inputfile = open( 'output_1000k_96_again.xyz' , 'r')
+    inputfile = open( 'coords.xyz' , 'r')
     outfile = open('10000k_96_quartz_again' , 'w')
    
     #Timestep loop
@@ -72,7 +72,7 @@ def main():
                 distances.append((x_pair_diff**2 + y_pair_diff**2 + z_pair_diff**2)**(1./2.))
 #               print distances
    
-    hist,bin_edges = np.histogram(distances,bins=nbins, range=(0,lattice/2))
+    hist,bin_edges = np.histogram(distances,bins=nbins, range=(0,lattice/2.))
     hist = hist/float(nsteps) 
 
     #Prepares an x column,bin_edges and y_column hist, which can plot a histogram in gnuplot
