@@ -44,7 +44,7 @@ def main():
 
         natoms = int(inputfile.readline().strip()) #Reads in number of atoms 
         inputfile.readline() #Reads line2, blank space
-
+        allatoms = []
         atoms = []
         for i in range(natoms):
             line = inputfile.readline()
@@ -53,7 +53,7 @@ def main():
         #Loops to find the distance between any two atoms
         for i in range(natoms): #Loops over first atom in the atom pairs
             atom1 = atoms[i]
-
+              
             for j in range(natoms):#Loops over second atom,doesn't account for duplicates
                 atom2 = atoms[j]
           
@@ -71,8 +71,7 @@ def main():
     distances = scipy.array(distances) #Creates scipy array
     
     distances = scipy.reshape(distances,(nsteps*natoms,-1))
-
-
+    #print distances
     #Loop through the distance matrix & determine number of nearest neighbours per atom
     nn = [] #Nearest neighbours count array
     tmp = [] #Temporary array for nn distance storage
@@ -85,7 +84,8 @@ def main():
                 row_nn = len(tmp) #Determines the number of distances obeying if
         tmp[:] = [] #Clears tmp before moving to the next row
         nn.append(row_nn)#Creates an array with each row representing the count of nn for each atom1
-        print nn
+        #print nn
+    #numpy. histogram(nn,
     
     #Find the average number of nearest neighbours:
     average_nn = np.mean(nn)
