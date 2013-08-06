@@ -54,7 +54,7 @@ def main():
             atoms.append(line.split()) #Appends lists of atom coordinates [TYPE,x,y,z],to be used in distances array
 
         atoms_alltimesteps.extend(atoms) #Appends atom coordinates together for ALL timesteps, to be used in histogram
-    print atoms_alltimesteps, len(atoms_alltimesteps)
+    #print atoms_alltimesteps, len(atoms_alltimesteps)
    
     for n in range(nsteps):#Time step loop for distance matrix     
         #Loops to find the distance between any two atoms
@@ -84,7 +84,7 @@ def main():
     nn = [] #Nearest neighbours count array
     tmp = [] #Temporary array for nn distance storage
     
-    #THe following will be used to plot nn distances spacially ( using a histogram)
+    #The following will be used to plot nn distances spacially ( using a histogram)
     bin_width = (lattice_z)/float(nbins)
     nn_bins = np.zeros(nbins,dtype = float) #Initialize array to store nn count in bins based on z-coordinate
     count_bins = np.zeros(nbins,dtype = float) # Initialize arrays that will store number of items in each bin 
@@ -105,6 +105,7 @@ def main():
        # print nn_bins
        # print count_bins
 
+    nn_spacial = []
     bin_edges = []
     middle = []
     for i in range(int(nbins)):    
@@ -113,6 +114,9 @@ def main():
         left = bin_edges[i]
         right = bin_width + left
         middle.append((left+right)/2.) #Finds the middle of each bin, to be used as x-axis in plot
+        if count_bins[i] > 0:
+            nn_spacial.append(nn_bins[i]/float(count_bins[i]))
+   # print nn_spacial
     #print middle
     
     
