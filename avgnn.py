@@ -55,8 +55,7 @@ def main():
 
         atoms_alltimesteps.extend(atoms) #Appends atom coordinates together for ALL timesteps, to be used in histogram
     print atoms_alltimesteps, len(atoms_alltimesteps)
-    print atoms[1][3]
-
+   
     for n in range(nsteps):#Time step loop for distance matrix     
         #Loops to find the distance between any two atoms
         for i in range(natoms): #Loops over first atom in the atom pairs
@@ -87,7 +86,7 @@ def main():
     
     #THe following will be used to plot nn distances spacially ( using a histogram)
     bin_width = (lattice_z)/float(nbins)
-    histogram = np.zeros(nbins,dtype = float) #Initialize array to store nn count in bins based on z-coordinate
+    nn_bins = np.zeros(nbins,dtype = float) #Initialize array to store nn count in bins based on z-coordinate
     count_bins = np.zeros(nbins,dtype = float) # Initialize arrays that will store number of items in each bin 
     
     for i in range(nsteps*natoms):
@@ -97,24 +96,18 @@ def main():
                 tmp.append(distances[i,j]) #Extracts all distance in col. i that obey if statement
                 row_nn = len(tmp) #Determines the number of distances obeying if
                 bin = int(float(atoms_alltimesteps[i][3])/bin_width)
-                count_bins[bin] += 1  #Adds one count to the approporiate bin  
+                nn_bins[bin] += 1  #Adds nn to the approporiate bin
+        count_bins[bin] += 1#Adds a value of 1 for each time a nn count falls into a certain bin 
+              
         tmp[:] = [] #Clears tmp before moving to the next row
         nn.append(row_nn)#Creates an array with each row representing the count of nn for each atom1
         print nn
-        print bin
-        
-    #Hist gives number of events in each bin --- what should my input thing be?
-    #for i in range(natoms*nsteps):
-      #  print atoms_alltimesteps[i][3]
-       # hist,bin_edges = np.histogram(atoms_alltimesteps[i][3],bins = nbins,range = (0,lattice_z))
-    #hist = hist/float(nsteps)
-    
-    #for i in range(len(hist)):
-        #print hist[i] 
-        #Defining variables for ease of understanding
+        print nn_bins
+        print count_bins
+     for in in range(natoms*nsteps):    
         #bin_width = (lattice_z)/(nbins)
-        #left = bin_edges[i] 
-        #right = bin_edges[i] + left
+        left = bin_edges[i] 
+        right = bin_edges[i] + left
 
         #Determine which atom's nn count belongs in which bin based on its z-coordinate
         #if atoms_alltimesteps[i][3] <= right and atoms_alltimesteps > left:
