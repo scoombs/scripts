@@ -101,19 +101,20 @@ def main():
               
         tmp[:] = [] #Clears tmp before moving to the next row
         nn.append(row_nn)#Creates an array with each row representing the count of nn for each atom1
-        print nn
-        print nn_bins
-        print count_bins
+       # print nn
+       # print nn_bins
+       # print count_bins
+
     bin_edges = []
+    middle = []
     for i in range(int(nbins)):    
         #Recall: bin_width = (lattice_z)/(nbins) , lattice_z being maximum z value, minimum being 0
         bin_edges.append(bin_width*i)
-        left.bin_edges[i] 
-        right = bin_edges[i] + left
-    print bin_edges
-
-        #Average of bin size, to be used as x-axis when plotting!
-        #middle = (left + right)/2.  
+        left = bin_edges[i]
+        right = bin_width + left
+        middle.append((left+right)/2.) #Finds the middle of each bin, to be used as x-axis in plot
+    #print middle
+    
     
     #Find the average number of nearest neighbours:
     average_nn = np.mean(nn)
