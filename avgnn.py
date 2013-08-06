@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-#Program used to calculate differnt properties about atom's nearest neighbours
+#Program used to calculate atom's nearest neighbours, to plot spacially
 
 import os,sys
 import numpy as np
@@ -29,7 +29,7 @@ def main():
 
         first_minimum = float(sys.argv[3])
         nsteps = int(sys.argv[4])
-        nbins = float(sys.argv[5]))
+        nbins = float(sys.argv[5])
     except IndexError:
         #Tell user what is needed
         print '\nusage: '+program+' lattice z-lattice first_gr_minimum nsteps nbins \n'
@@ -54,7 +54,8 @@ def main():
             atoms.append(line.split()) #Appends lists of atom coordinates [TYPE,x,y,z],to be used in distances array
 
         atoms_alltimesteps.extend(atoms) #Appends atom coordinates together for ALL timesteps, to be used in histogram
-    #print atoms_alltimesteps, len(atoms_alltimesteps)
+    print atoms_alltimesteps, len(atoms_alltimesteps)
+    print atoms[1][3]
 
     for n in range(nsteps):#Time step loop for distance matrix     
         #Loops to find the distance between any two atoms
@@ -79,9 +80,15 @@ def main():
     
     distances = scipy.reshape(distances,(nsteps*natoms,-1))
     #print distances
+
     #Loop through the distance matrix & determine number of nearest neighbours per atom
     nn = [] #Nearest neighbours count array
     tmp = [] #Temporary array for nn distance storage
+    
+    #THe following will be used to plot nn distances spacially ( using a histogram)
+    bin_width = (lattice_z)/float(nbins)
+    histogram = np.zeros(nbins,dtype = float) #Initialize array to store nn count in bins based on z-coordinate
+    count_bins = np.zeros(nbins,dtype = float) # Initialize arrays that will store number of items in each bin 
     
     for i in range(nsteps*natoms):
 
@@ -89,24 +96,31 @@ def main():
             if distances[i,j] > 0.0001 and distances[i,j] < first_minimum:  #First minima of the g(r) function
                 tmp.append(distances[i,j]) #Extracts all distance in col. i that obey if statement
                 row_nn = len(tmp) #Determines the number of distances obeying if
+                bin = int(float(atoms_alltimesteps[i][3])/bin_width)
+                count_bins[bin] += 1  #Adds one count to the approporiate bin  
         tmp[:] = [] #Clears tmp before moving to the next row
         nn.append(row_nn)#Creates an array with each row representing the count of nn for each atom1
-        #print nn
-    
-    hist,bin_edges = np.histogram(nn,bins = nbins,range = (0,z_lattice))
-    hist = hist/float(nsteps)
-    
-    for i in range(len(hist)):
+        print nn
+        print bin
         
+    #Hist gives number of events in each bin --- what should my input thing be?
+    #for i in range(natoms*nsteps):
+      #  print atoms_alltimesteps[i][3]
+       # hist,bin_edges = np.histogram(atoms_alltimesteps[i][3],bins = nbins,range = (0,lattice_z))
+    #hist = hist/float(nsteps)
+    
+    #for i in range(len(hist)):
+        #print hist[i] 
         #Defining variables for ease of understanding
-        bin_width = (z_lattice)/(nbins)
-        left = bin_edges[i] 
-        right = bin_edges[i] + left
+        #bin_width = (lattice_z)/(nbins)
+        #left = bin_edges[i] 
+        #right = bin_edges[i] + left
 
         #Determine which atom's nn count belongs in which bin based on its z-coordinate
-          
+        #if atoms_alltimesteps[i][3] <= right and atoms_alltimesteps > left:
+            #nn[i]    
         #Average of bin size, to be used as x-axis when plotting!
-        middle = (left + right)/2.  
+        #middle = (left + right)/2.  
     
     #Find the average number of nearest neighbours:
     average_nn = np.mean(nn)
