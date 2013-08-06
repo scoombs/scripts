@@ -104,14 +104,14 @@ def main():
         print nn
         print nn_bins
         print count_bins
-     for in in range(natoms*nsteps):    
-        #bin_width = (lattice_z)/(nbins)
-        left = bin_edges[i] 
+    bin_edges = []
+    for i in range(int(nbins)):    
+        #Recall: bin_width = (lattice_z)/(nbins) , lattice_z being maximum z value, minimum being 0
+        bin_edges.append(bin_width*i)
+        left.bin_edges[i] 
         right = bin_edges[i] + left
+    print bin_edges
 
-        #Determine which atom's nn count belongs in which bin based on its z-coordinate
-        #if atoms_alltimesteps[i][3] <= right and atoms_alltimesteps > left:
-            #nn[i]    
         #Average of bin size, to be used as x-axis when plotting!
         #middle = (left + right)/2.  
     
