@@ -95,7 +95,8 @@ def main():
             if distances[i,j] > 0.0001 and distances[i,j] < first_minimum:  #First minima of the g(r) function
                 tmp.append(distances[i,j]) #Extracts all distance in col. i that obey if statement
                 row_nn = len(tmp) #Determines the number of distances obeying if
-                bin = int(float(atoms_alltimesteps[i][3])/bin_width)
+                bin = int(float(atoms_alltimesteps[i][3])/float(bin_width))
+                #print 'bin =', bin
                 nn_bins[bin] += 1  #Adds nn to the approporiate bin
         count_bins[bin] += 1#Adds a value of 1 for each time a nn count falls into a certain bin 
               
@@ -104,6 +105,9 @@ def main():
        # print nn
        # print nn_bins
        # print count_bins
+    
+    #Print plotting information to outputfile: 
+    outputfile = open('nn_spacialplot.dat' ,'w')
 
     nn_spacial = []
     bin_edges = []
@@ -116,9 +120,13 @@ def main():
         middle.append((left+right)/2.) #Finds the middle of each bin, to be used as x-axis in plot
         if count_bins[i] > 0:
             nn_spacial.append(nn_bins[i]/float(count_bins[i]))
-   # print nn_spacial
-    #print middle
-    
+        else:
+            nn_spacial.append(nn_bins[i])
+   # print nn_spacial,len(nn_spacial)
+   # print middle,len(middle)
+        outputfile.write(str(middle[i]) + ' ' + str(nn_spacial[i]) + '\n')
+    inputfile.close()
+    outputfile.close()    
     
     #Find the average number of nearest neighbours:
     average_nn = np.mean(nn)
