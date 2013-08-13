@@ -40,7 +40,10 @@ def main():
     filein = raw_input("Enter filename (xyz format):")
     inputfile = open(filein, 'r')
     
-    
+    si_surf_snaps = []
+    o_surf_snaps = []
+    si_bulk_snaps = []
+    o_bulk_snaps = []
     for n in range(nsteps): #Time step loop
 
         natoms = int(inputfile.readline().strip()) #Reads in number of atoms
@@ -76,7 +79,7 @@ def main():
                 x_pair_diff = float(atom1[1]) - float(atom2[1])
                 y_pair_diff = float(atom1[2]) - float(atom2[2])
                 z_pair_diff = float(atom1[3]) - float(atom2[3])
-                print z_pair_diff
+                #print z_pair_diff
                 #Need to consider affects of periodic boundary conditions:
                 x_pair_diff -= lattice_x*pbc_round(x_pair_diff/lattice_x)
                 y_pair_diff -= lattice_y*pbc_round(y_pair_diff/lattice_y)
@@ -93,8 +96,8 @@ def main():
                 surface.append(i) #This gives COLUMN indices for surface atoms
             else:
                 bulk.append(i)
-        print'bulk=', bulk
-        print 'surf = ',surface,len(surface),natoms
+       # print'bulk=', bulk
+       # print 'surf = ',surface,len(surface),natoms
     
         #NEAREST NEIGHBOURS FOR SURFACE ATOMS:
 
@@ -119,16 +122,15 @@ def main():
                         row = len(tmp) #Determines number of distances obeying if
                 tmp[:] = [] #clears tmp before moving to next row
                 nnO_surface.append(row)
-        print'nn_Sisurface = ', nnSi_surface 
+        #print'nn_Sisurface = ', nnSi_surface 
         #print 'nn_Osurface = ' , nnO_surface
     
-        #print type(nnSi_surface[0]) 
         #Find avg number of Si surface nearest neighbours:
-        nn_surfaceSi = np.mean(nnSi_surface,dtype = np.float64)
-        print 'The avg # of surface Si nearest neighbours is:', nn_surfaceSi
+        #nn_surfaceSi = np.mean(nnSi_surface,dtype = np.float64)
+        #print 'The avg # of surface Si nearest neighbours is:', nn_surfaceSi
         #Find the avg number of O surface nearest neighbours: 
-        nn_surfaceO = np.mean(nnO_surface,dtype = np.float64)
-        print 'The avg # of surface O nearest neighbours is:',nn_surfaceO 
+        #nn_surfaceO = np.mean(nnO_surface,dtype = np.float64)
+        #print 'The avg # of surface O nearest neighbours is:',nn_surfaceO 
     
         #NEAREST NEIGHBOURS FOR BULK ATOMS:    
 
@@ -154,15 +156,22 @@ def main():
         #print 'nn_Sibulk =',nnSi_bulk
         #print 'nn_Obulk =',nnO_bulk
 
-    #Find the avg number of Si bulk nn:
-        nn_bulkSi = np.mean(nnSi_bulk,dtype = np.float64)
-        print 'The avg # of bulk Si nn is:',nn_bulkSi
-    #Find the avg number of O bulk nn:
-        nn_bulkO = np.mean(nnO_bulk,dtype = np.float64)
-        print 'The avg # of bulk O nn is:',nn_bulkO
+        #Find the avg number of Si bulk nn:
+        #nn_bulkSi = np.mean(nnSi_bulk,dtype = np.float64)
+        #print 'The avg # of bulk Si nn is:',nn_bulkSi
+        #Find the avg number of O bulk nn:
+        #nn_bulkO = np.mean(nnO_bulk,dtype = np.float64)
+        #print 'The avg # of bulk O nn is:',nn_bulkO
 
-
- 
+        #Now, want to make one large array of nearest neighbour counts for over all time steps 
+        si_surf_snaps.extend(nnSi_surface) 
+        o_surf_snaps.extend(nnO_surface)
+        si_bulk_snaps.extend(nnSi_bulk)
+        o_bulk_snaps.extend(nnO_bulk)
+    print si_surf_snaps
+    #Find avg number of Si surface nearest neighbours:
+    si_surf_snaps = np.mean(si_surf_snaps,dtype = np.float64)
+    print 'The avg # of surface Si nn is:', si_surf_snaps
 
 if __name__=='__main__':
      main()
