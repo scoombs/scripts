@@ -97,7 +97,6 @@ def main():
             else:
                 bulk.append(i)
        # print'bulk=', bulk
-       # print 'surf = ',surface,len(surface),natoms
     
         #NEAREST NEIGHBOURS FOR SURFACE ATOMS:
 
@@ -125,13 +124,6 @@ def main():
         #print'nn_Sisurface = ', nnSi_surface 
         #print 'nn_Osurface = ' , nnO_surface
     
-        #Find avg number of Si surface nearest neighbours:
-        #nn_surfaceSi = np.mean(nnSi_surface,dtype = np.float64)
-        #print 'The avg # of surface Si nearest neighbours is:', nn_surfaceSi
-        #Find the avg number of O surface nearest neighbours: 
-        #nn_surfaceO = np.mean(nnO_surface,dtype = np.float64)
-        #print 'The avg # of surface O nearest neighbours is:',nn_surfaceO 
-    
         #NEAREST NEIGHBOURS FOR BULK ATOMS:    
 
         nnSi_bulk = []
@@ -156,22 +148,23 @@ def main():
         #print 'nn_Sibulk =',nnSi_bulk
         #print 'nn_Obulk =',nnO_bulk
 
-        #Find the avg number of Si bulk nn:
-        #nn_bulkSi = np.mean(nnSi_bulk,dtype = np.float64)
-        #print 'The avg # of bulk Si nn is:',nn_bulkSi
-        #Find the avg number of O bulk nn:
-        #nn_bulkO = np.mean(nnO_bulk,dtype = np.float64)
-        #print 'The avg # of bulk O nn is:',nn_bulkO
-
         #Now, want to make one large array of nearest neighbour counts for over all time steps 
         si_surf_snaps.extend(nnSi_surface) 
         o_surf_snaps.extend(nnO_surface)
         si_bulk_snaps.extend(nnSi_bulk)
         o_bulk_snaps.extend(nnO_bulk)
-    print si_surf_snaps
-    #Find avg number of Si surface nearest neighbours:
+    #Find avg number of Si surface nearest neighbours over all snapshots:
     si_surf_snaps = np.mean(si_surf_snaps,dtype = np.float64)
     print 'The avg # of surface Si nn is:', si_surf_snaps
+    #Find the avg number of O surface nearest neigh. over all snapshots:
+    o_surf_snaps = np.mean(o_surf_snaps,dtype = np.float64)
+    print 'The avg # of surface O nn is:' , o_surf_snaps
+    #Fin the avg # of bulk Si nn over all snapshots:
+    si_bulk_snaps = np.mean(si_bulk_snaps,dtype = np.float64)
+    print 'The avg # of bulk Si nn is:' , si_bulk_snaps
+    #Find the avg # of bulk O nn over all snapshots:
+    o_bulk_snaps = np.mean(o_bulk_snaps,dtype = np.float64)
+    print 'The avg # of bulk O nn is:' , o_bulk_snaps 
 
 if __name__=='__main__':
      main()
