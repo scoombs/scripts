@@ -39,7 +39,6 @@ def main():
     inputfile = open(filein, 'r')
     
     
-    distances = []
     for n in range(nsteps): #Time step loop
 
         natoms = int(inputfile.readline().strip()) #Reads in number of atoms
@@ -64,6 +63,7 @@ def main():
         #print max_z
 
         #Loops to find the distance between any two atoms
+        distances = np.zeros((natoms,natoms),dtype = float)
         for i in range(natoms): #Loops over first atom in the atom pairs
             atom1 = atoms[i]
            # print atom1     
@@ -80,92 +80,90 @@ def main():
                 y_pair_diff -= lattice_y*pbc_round(y_pair_diff/lattice_y)
                 z_pair_diff -= lattice_z*pbc_round(z_pair_diff/lattice_z)
    
-                distances.append((x_pair_diff**2 + y_pair_diff**2 + z_pair_diff**2)**(1./2.))
-    distances = scipy.array(distances) #Creates scipy array
-    distances = scipy.reshape(distances,(nsteps*natoms,-1))#Reshapes array into a square matrix,undeclared should be natoms as well
-    #print distances
+                distances[i][j] = (x_pair_diff**2 + y_pair_diff**2 + z_pair_diff**2)**(1./2.)
     
-    #Separate surface & bulk,captures indices for atoms that obey statements
-    surface = []
-    bulk = []
-    for i in range(len(atoms)):
-        z_diff = abs(float((atoms[i][3] - max_z)))
-        if z_diff <= width:
-            surface.append(i)
-        else:
-            bulk.append(i)
-    #print'bulk=', bulk
-    #print 'surf = ',surface
+        #Separate surface & bulk,captures indices for atoms that obey statements
+        surface = []
+        bulk = []
+        for i in range(len(atoms)):
+            z_diff = abs(float((atoms[i][3] - max_z)))
+            if z_diff <= width:
+                surface.append(i)
+            else:
+                bulk.append(i)
+        #print'bulk=', bulk
+        #print 'surf = ',surface
 
-    #Find bond lengths in surface:
-    SiSi_surf = [] #Si-Si bond lengths for surface
-    SiO_surf = []  #Si-O bond lengths for surface
-    OO_surf = []   #O-O bond lengths for surface
-    for i in surface: #Loop through all the indices elements for location of atoms on surface in atoms list 
+        #Find bond lengths in surface:
+        SiSi_surf = [] #Si-Si bond lengths for surface
+        SiO_surf = []  #Si-O bond lengths for surface
+        OO_surf = []   #O-O bond lengths for surface
+        for i in surface: #Loop through all the indices elements for location of atoms on surface in atoms list 
        
-        if atoms[i][0] == 'Si':
-           # print atoms[i]
-           # print 'i=',i
-            for j in range(natoms/3):#Loop through all the Si atoms in surface
-                if distances[i,j] > 0.0001 and distances[i,j] < 3.5: #Experiment says it is 3.06 A
-                    SiSi_surf.append(distances[i,j]) #Extracts all distance bewteen Si & Si that obey if
+            if atoms[i][0] == 'Si':
+               # print atoms[i]
+               # print 'i=',i
+                for j in range(natoms/3):#Loop through all the Si atoms in surface
+                    if distances[i,j] > 0.0001 and distances[i,j] < 3.5: #Experiment says it is 3.06 A
+                        SiSi_surf.append(distances[i,j]) #Extracts all distance bewteen Si & Si that obey if
 
-            for j in np.arange(natoms/3,natoms): #Loop through all the O atoms, going down the row
-                if distances[i,j] > 0.0001 and distances[i,j] < 2: #Experiment says its 1.6A
-                   SiO_surf.append(distances[i,j]) # Extracts all distances b/w Si & O that obey if
+                for j in np.arange(natoms/3,natoms): #Loop through all the O atoms, going down the row
+                    if distances[i,j] > 0.0001 and distances[i,j] < 2: #Experiment says its 1.6A
+                       SiO_surf.append(distances[i,j]) # Extracts all distances b/w Si & O that obey if
     
-        if atoms[i][0] == 'O':
+            if atoms[i][0] == 'O':
        
-            for j in np.arange(natoms/3,natoms): #Loops through all O atoms, going down the row
-                if distances[i,j] > 0.0001 and distances[i,j] < 3: #Experiment says its 2.6
-                 OO_surf.append(distances[i,j]) #Extracts distances b/w O-O obeying if
-    print '\n'  
-    average_SiSi_surf = np.mean(SiSi_surf)
-    std_SiSi_surf = np.std(SiSi_surf,dtype = np.float64)
-    print 'SURFACE: The average Si-Si bond length & standard deviation:',average_SiSi_surf,std_SiSi_surf
+                for j in np.arange(natoms/3,natoms): #Loops through all O atoms, going down the row
+                    if distances[i,j] > 0.0001 and distances[i,j] < 3: #Experiment says its 2.6
+                    OO_surf.append(distances[i,j]) #Extracts distances b/w O-O obeying if
+   # print '\n'  
+   # average_SiSi_surf = np.mean(SiSi_surf)
+   # std_SiSi_surf = np.std(SiSi_surf,dtype = np.float64)
+   # print 'SURFACE: The average Si-Si bond length & standard deviation:',average_SiSi_surf,std_SiSi_surf
 
-    average_SiO_surf = np.mean(SiO_surf)
-    std_SiO_surf = np.std(SiO_surf,dtype = np.float64) 
-    print 'SURFACE: The average Si-O bond length & standard deviation:',average_SiO_surf,std_SiO_surf
+   # average_SiO_surf = np.mean(SiO_surf)
+   # std_SiO_surf = np.std(SiO_surf,dtype = np.float64) 
+   # print 'SURFACE: The average Si-O bond length & standard deviation:',average_SiO_surf,std_SiO_surf
 
-    average_OO_surf = np.mean(OO_surf)
-    std_OO_surf = np.std(OO_surf,dtype = np.float64)
-    print 'SURFACE: The average O-O bond length & standard deviation:', average_OO_surf,std_OO_surf
-    print '\n' 
-    #Find bond lengths in bulk:
-    SiSi_bulk = [] #Si-Si bond lengths for bulk
-    SiO_bulk = [] #Si-O bond lengths for bulk
-    OO_bulk = [] #O-O bond lengths for bulk
-    for i in bulk: #Loop through all the indices elements for location of atoms on surface in atoms list
+   # average_OO_surf = np.mean(OO_surf)
+   # std_OO_surf = np.std(OO_surf,dtype = np.float64)
+   # print 'SURFACE: The average O-O bond length & standard deviation:', average_OO_surf,std_OO_surf
+   # print '\n' 
+        #Find bond lengths in bulk:
+        SiSi_bulk = [] #Si-Si bond lengths for bulk
+        SiO_bulk = [] #Si-O bond lengths for bulk
+        OO_bulk = [] #O-O bond lengths for bulk
+        for i in bulk: #Loop through all the indices elements for location of atoms on surface in atoms list
         
-        if atoms[i][0] == 'Si':
+            if atoms[i][0] == 'Si':
            
-            for j in range(natoms/3):#Loop through all the Si atoms of bulk
-                if distances[i,j] > 0.0001 and distances[i,j] < 3.5: #Experiment says it is 3.06 A
-                    SiSi_bulk.append(distances[i,j]) #Extracts all distance bewteen Si & Si that obey if
+                for j in range(natoms/3):#Loop through all the Si atoms of bulk
+                    if distances[i,j] > 0.0001 and distances[i,j] < 3.5: #Experiment says it is 3.06 A
+                        SiSi_bulk.append(distances[i,j]) #Extracts all distance bewteen Si & Si that obey if
 
-            for j in np.arange(natoms/3,natoms): #Loop through all the O atoms, going down the row
-                if distances[i,j] > 0.0001 and distances[i,j] < 2: #Experiment says its 1.6A
-                   SiO_bulk.append(distances[i,j]) # Extracts all distances b/w Si & O that obey if
+                for j in np.arange(natoms/3,natoms): #Loop through all the O atoms, going down the row
+                    if distances[i,j] > 0.0001 and distances[i,j] < 2: #Experiment says its 1.6A
+                       SiO_bulk.append(distances[i,j]) # Extracts all distances b/w Si & O that obey if
     
-        if atoms[i][0] == 'O':
+            if atoms[i][0] == 'O':
        
-            for j in np.arange(natoms/3,natoms): #Loops through all O atoms, going down the row
-                if distances[i,j] > 0.0001 and distances[i,j] < 3: #Experiment says its 2.6
-                 OO_bulk.append(distances[i,j]) #Extracts distances b/w O-O obeying if
+                for j in np.arange(natoms/3,natoms): #Loops through all O atoms, going down the row
+                    if distances[i,j] > 0.0001 and distances[i,j] < 3: #Experiment says its 2.6
+                        OO_bulk.append(distances[i,j]) #Extracts distances b/w O-O obeying if
   
-    average_SiSi_bulk = np.mean(SiSi_bulk)
-    std_SiSi_bulk = np.std(SiSi_bulk,dtype = np.float64)
-    print 'BULK: The average Si-Si bond length & standard deviation:',average_SiSi_bulk,std_SiSi_bulk
+   # average_SiSi_bulk = np.mean(SiSi_bulk)
+   # std_SiSi_bulk = np.std(SiSi_bulk,dtype = np.float64)
+   # print 'BULK: The average Si-Si bond length & standard deviation:',average_SiSi_bulk,std_SiSi_bulk
 
-    average_SiO_bulk = np.mean(SiO_bulk)
-    std_SiO_bulk = np.std(SiO_bulk,dtype = np.float64)
-    print 'BULK: The average Si-O bond length & standard deviation:',average_SiO_bulk,std_SiO_bulk
+   # average_SiO_bulk = np.mean(SiO_bulk)
+   # std_SiO_bulk = np.std(SiO_bulk,dtype = np.float64)
+   # print 'BULK: The average Si-O bond length & standard deviation:',average_SiO_bulk,std_SiO_bulk
 
-    average_OO_bulk = np.mean(OO_bulk)
-    std_OO_bulk = np.std(OO_bulk,dtype = np.float64)
-    print 'BULK: The average O-O bond length & standard deviation:', average_OO_bulk,std_OO_bulk
-    print '\n'
+    #average_OO_bulk = np.mean(OO_bulk)
+    #std_OO_bulk = np.std(OO_bulk,dtype = np.float64)
+    #print 'BULK: The average O-O bond length & standard deviation:', average_OO_bulk,std_OO_bulk
+    #print '\n'
+
 
 if __name__=='__main__':
      main()
