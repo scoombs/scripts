@@ -36,13 +36,15 @@ def main():
         #Exit program cleanly
         sys.exit(0)
 
-   #Allow user to input file name from terminal:
+    #Allow user to input file name from terminal:
     filein = raw_input("Enter filename (xyz format):")
     inputfile = open(filein, 'r')
     
-    
-    atoms_alltimesteps = []
-    distances = []
+    #The following will be used to plot nn distances spacially ( using a histogram)
+    bin_width = (lattice_z)/float(nbins)
+    nn_bins = np.zeros(nbins,dtype = float) #Initialize array to store nn count in bins based on z-coordinate
+    count_bins = np.zeros(nbins,dtype = int) # Initialize arrays that will store number of items in each bin
+ 
     for n in range(nsteps): #Time step loop
 
         natoms = int(inputfile.readline().strip()) #Reads in number of atoms 
@@ -53,11 +55,8 @@ def main():
             line = inputfile.readline()
             atoms.append(line.split()) #Appends lists of atom coordinates [TYPE,x,y,z],to be used in distances array
 
-        atoms_alltimesteps.extend(atoms) #Appends atom coordinates together for ALL timesteps, to be used in histogram
-    #print atoms_alltimesteps, len(atoms_alltimesteps)
-   
-    for n in range(nsteps):#Time step loop for distance matrix     
         #Loops to find the distance between any two atoms
+        distances = np.zeros((natoms,natoms),dtype = float) 
         for i in range(natoms): #Loops over first atom in the atom pairs
             atom1 = atoms[i]
               
@@ -74,40 +73,28 @@ def main():
                 y_pair_diff -= lattice_y*pbc_round(y_pair_diff/lattice_y)
                 z_pair_diff -= lattice_z*pbc_round(z_pair_diff/lattice_z)
    
-                distances.append((x_pair_diff**2 + y_pair_diff**2 + z_pair_diff**2)**(1./2.))
-    distances = scipy.array(distances) #Creates scipy array
+                distances[i][j] = (x_pair_diff**2 + y_pair_diff**2 + z_pair_diff**2)**(1./2.)
+        #print distances,type(distances[0][0])
+        #Loop through the distance matrix & determine number of nearest neighbours per atom
     
-    distances = scipy.reshape(distances,(nsteps*natoms,-1))
-    #print distances
+        for i in range(natoms):
+        
+            ifdist = [] #Temporary array for nn distance storage
 
-    #Loop through the distance matrix & determine number of nearest neighbours per atom
-    nn = [] #Nearest neighbours count array
-    tmp = [] #Temporary array for nn distance storage
-    
-    #The following will be used to plot nn distances spacially ( using a histogram)
-    bin_width = (lattice_z)/float(nbins)
-    nn_bins = np.zeros(nbins,dtype = float) #Initialize array to store nn count in bins based on z-coordinate
-    count_bins = np.zeros(nbins,dtype = float) # Initialize arrays that will store number of items in each bin 
-    
-    for i in range(nsteps*natoms):
-
-        for j in np.arange(natoms):#Loop through each element in row
-            if distances[i,j] > 0.0001 and distances[i,j] < first_minimum:  #First minima of the g(r) function
-                tmp.append(distances[i,j]) #Extracts all distance in col. i that obey if statement
-                row_nn = len(tmp) #Determines the number of distances obeying if
-                bin = int(float(atoms_alltimesteps[i][3])/float(bin_width))
-                #print 'bin =', bin
-                nn_bins[bin] += 1  #Adds nn to the approporiate bin
-        count_bins[bin] += 1#Adds a value of 1 for each time a nn count falls into a certain bin 
-              
-        tmp[:] = [] #Clears tmp before moving to the next row
-        nn.append(row_nn)#Creates an array with each row representing the count of nn for each atom1
-       # print nn
-       # print nn_bins
-       # print count_bins
+            for j in range(natoms):#Loop through each element in row
+                if distances[i,j] > 0.0001 and distances[i,j] < first_minimum:  #First minima of the g(r) function
+                    ifdist.append(distances[i,j]) #Extracts all distance in col. i that obey if statement
+            row_nn = len(ifdist) #Determines the number of distances obeying if
+            bin = int(float(atoms[i][3])/float(bin_width))
+#            print bin, row_nn
+            nn_bins[bin] += row_nn  #Adds nn to the approporiate bin
+            count_bins[bin] += 1 #Adds a value of 1 for each time a nn count falls into a certain bin 
+ 
+#        print nn_bins
+#        print count_bins
     
     #Print plotting information to outputfile: 
-    outputfile = open('nn_spacialplot.dat' ,'w')
+   # outputfile = open('TESTnn_spacialplot.dat' ,'w')
 
     nn_spacial = []
     bin_edges = []
@@ -124,16 +111,16 @@ def main():
             nn_spacial.append(nn_bins[i])
    # print nn_spacial,len(nn_spacial)
    # print middle,len(middle)
-        outputfile.write(str(middle[i]) + ' ' + str(nn_spacial[i]) + '\n')
+       # outputfile.write(str(middle[i]) + ' ' + str(nn_spacial[i]) + '\n')
     inputfile.close()
-    outputfile.close()    
+   # outputfile.close()    
     
     #Find the average number of nearest neighbours:
-    average_nn = np.mean(nn)
-    print 'The average number of nearest neighbours is:',average_nn
+#    average_nn = np.mean(nn)
+#    print 'The average number of nearest neighbours is:',average_nn
     #Find the standard deviation: std = sqrt(mean(abs(x - x.mean())**2))
-    std_dev = np.std(nn,dtype = np.float64)
-    print 'The standard deviation is:',std_dev
+#    std_dev = np.std(nn,dtype = np.float64)
+#    print 'The standard deviation is:',std_dev
     
 
 if __name__=='__main__':
